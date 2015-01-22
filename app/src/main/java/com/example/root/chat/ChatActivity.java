@@ -19,6 +19,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 
 public class ChatActivity extends ActionBarActivity {
 
@@ -28,6 +30,9 @@ public class ChatActivity extends ActionBarActivity {
     private Message message;
     private boolean isMe;
     private Contact contact;
+    private ArrayList<Message> messages;
+    DatabaseHelper helper = new DatabaseHelper(this);
+    private long contactId;
 
     private int notificationID = 100;
 
@@ -42,13 +47,15 @@ public class ChatActivity extends ActionBarActivity {
         newMessage = (EditText) findViewById(R.id.newMessage);
         sendMessage = (Button) findViewById(R.id.sendBtn);
         listMessages = (ListView) findViewById(R.id.listChat);
-        String contactName = getIntent().getStringExtra("contact");
-        setTitle(contactName);
+        contactId = getIntent().getLongExtra("contact", 0);
+        contact = helper.getContact(contactId);
+        setTitle(contact.getContact());
 
-        contact = ContactBase.get(this).getContact(contactName);
         contact.setCounter(0);
         isMe = true;
-        final ChatAdapter adapter = new ChatAdapter(this, contact.getMessages());
+
+        messages = helper.getAllMessages(contactId);
+        final ChatAdapter adapter = new ChatAdapter(this, messages);
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,25 +64,26 @@ public class ChatActivity extends ActionBarActivity {
                     sendMessage();
                     adapter.notifyDataSetChanged();
                     hideSoftKeyboard(ChatActivity.this, v);
-                    listMessages.setSelection(contact.getMessages().size()-1);
+                    listMessages.setSelection(messages.size()-1);
                 }
             }
         });
         listMessages.setAdapter(adapter);
-        listMessages.setSelection(contact.getMessages().size()-1);
+        listMessages.setSelection(messages.size()-1);
         listMessages.setDivider(null);
-        Log.d("log", contactName + contact.getCounter());
+        Log.d("log", contact.getContact() + contact.getCounter());
 
 
     }
     private boolean sendMessage() {
         message = new Message(newMessage.getText().toString(), isMe);
-        contact.addMessage(message);
+        helper.addMessage(message,contactId);
+        messages = helper.getAllMessages(contactId);
         if (!isMe) {
             int counter = contact.getCounter() + 1;
             contact.setCounter(counter);
             displayNotification(message);
-            contact.setMsgDate(message.getStringDate());
+            contact.setMsgDate(message.getMsgDate());
         }
         isMe = !isMe;
         /*String msgDate = message.getStringDate();

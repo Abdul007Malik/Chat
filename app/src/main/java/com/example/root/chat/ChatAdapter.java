@@ -53,7 +53,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         messageObj = getItem(position);
         String message = messageObj.getMessage();
         holder.messageView.setText(message);
-        holder.messageDate.setText(messageObj.getStringDate());
+        holder.messageDate.setText(messageObj.getMsgDate());
         holder.singleMessageLayout.setBackgroundResource(messageObj.isMe() ? R.drawable.bubble_a : R.drawable.bubble_b);
         holder.singleMessageContainer.setGravity(messageObj.isMe() ? Gravity.RIGHT : Gravity.LEFT);
         if (messageObj.isMe()) {

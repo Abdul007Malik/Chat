@@ -28,6 +28,7 @@ public class ContactActivity extends ActionBarActivity {
     private ListView contactList;
     private ContactAdapter adapter;
     private ArrayList<Contact> contacts;
+    DatabaseHelper helper = new DatabaseHelper(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +36,7 @@ public class ContactActivity extends ActionBarActivity {
         Log.d("log4", "onCreate");
         setContentView(R.layout.activity_contact);
 
-        DatabaseHelper helper = new DatabaseHelper(this);
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        contacts = ContactBase.get(this).getContacts();
+        contacts = helper.getAllContacts();
 
         contactList = (ListView) findViewById(R.id.contactList);
         adapter = new ContactAdapter(this, contacts);
@@ -48,7 +46,8 @@ public class ContactActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(ContactActivity.this, ChatActivity.class);
-                intent.putExtra("contact", contacts.get(position).getContact());
+                Contact contact = contacts.get(position);
+                intent.putExtra("contact", helper.getContactId(contact));
                 startActivityForResult(intent, 0);
                 Log.d("log", contacts.get(position).getContact() + " is clicked " + contacts.get(position).getCounter());
             }
@@ -82,10 +81,11 @@ public class ContactActivity extends ActionBarActivity {
                     ContactBase contactBase = ContactBase.get(ContactActivity.this);
                     for (int i = adapter.getCount() -1; i >= 0; i--) {
                         if (contactList.isItemChecked(i)) {
-                            contactBase.deleteContact(adapter.getItem(i));
+                            helper.deleteContact(adapter.getItem(i));
                         }
                     }
                     mode.finish();
+                    contacts = helper.getAllContacts();
                     adapter.notifyDataSetChanged();
                     return true;
                 }
@@ -138,9 +138,9 @@ public class ContactActivity extends ActionBarActivity {
                         }
                         if (!isExist) {
                             Contact contact = new Contact(editText.getText().toString(), 0);
-                            contactBase.addContact(contact);
+                            long contactId = helper.addContact(contact);
                             Intent intent = new Intent(ContactActivity.this, ChatActivity.class);
-                            intent.putExtra("contact", contact.getContact());
+                            intent.putExtra("contact", contactId);
                             startActivityForResult(intent, 0);
                         }
                     }
@@ -167,7 +167,8 @@ public class ContactActivity extends ActionBarActivity {
         int position = info.position;
         Contact contact = adapter.getItem(position);
 
-        ContactBase.get(this).deleteContact(contact);
+        helper.deleteContact(contact);
+        contacts = helper.getAllContacts();
         adapter.notifyDataSetChanged();
         return true;
     }

@@ -11,14 +11,16 @@ public class Contact {
 
     private String contact, msgDate;
     private int counter;
-    private ArrayList<Message> messages;
+
+    public Contact() {
+
+    }
 
     public Contact(String contact, int counter) {
         this.contact = contact;
         this.counter = counter;
         Date date = new Date();
         msgDate= new SimpleDateFormat("H:mm").format(date);
-        messages = new ArrayList<Message>();
     }
 
     public String getContact() {
@@ -35,18 +37,6 @@ public class Contact {
 
     public void setCounter(int counter) {
         this.counter = counter;
-    }
-
-    public void addMessage(Message m) {
-        messages.add(m);
-    }
-
-    public ArrayList<Message> getMessages() {
-        if (messages == null) {
-            return new ArrayList<Message>();
-        } else {
-            return messages;
-        }
     }
 
     public String getMsgDate() {
