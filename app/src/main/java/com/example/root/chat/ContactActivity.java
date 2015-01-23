@@ -81,7 +81,11 @@ public class ContactActivity extends ActionBarActivity {
                     ContactBase contactBase = ContactBase.get(ContactActivity.this);
                     for (int i = adapter.getCount() -1; i >= 0; i--) {
                         if (contactList.isItemChecked(i)) {
+                            long id = helper.getContactId(adapter.getItem(i));
                             helper.deleteContact(adapter.getItem(i));
+                            helper.deleteMessages(id);
+                            contacts = helper.getAllContacts();
+                            refreshListView(contacts);
                         }
                     }
                     mode.finish();
@@ -139,6 +143,8 @@ public class ContactActivity extends ActionBarActivity {
                         if (!isExist) {
                             Contact contact = new Contact(editText.getText().toString(), 0);
                             long contactId = helper.addContact(contact);
+                            contacts = helper.getAllContacts();
+                            refreshListView(contacts);
                             Intent intent = new Intent(ContactActivity.this, ChatActivity.class);
                             intent.putExtra("contact", contactId);
                             startActivityForResult(intent, 0);
@@ -171,5 +177,11 @@ public class ContactActivity extends ActionBarActivity {
         contacts = helper.getAllContacts();
         adapter.notifyDataSetChanged();
         return true;
+    }
+
+    public void refreshListView(ArrayList<Contact> contacts) {
+        adapter.clear();
+        adapter.addAll(contacts);
+        adapter.notifyDataSetChanged();
     }
 }

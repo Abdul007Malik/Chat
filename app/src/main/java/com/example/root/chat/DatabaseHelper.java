@@ -21,7 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Database Name
-    private static final String DATABASE_NAME = "chatDatabase";
+    private static final String DATABASE_NAME = "chatDatabase2";
 
     // Table Names
     private static final String TABLE_CONTACT = "contacts";
@@ -52,7 +52,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // MESSAGE table
     private static final String CREATE_TABLE_MESSAGE = "CREATE TABLE " + TABLE_MESSAGE
             + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_MESSAGE_TEXT + " VARCHAR(255),"
-            + KEY_IS_ME + " BOOLEAN" + KEY_DATE + " VARCHAR(255)," + KEY_CONTACT_ID + " INTEGER" + ")";
+            + KEY_IS_ME + " BOOLEAN," + KEY_DATE + " VARCHAR(255)," + KEY_CONTACT_ID + " INTEGER" + ")";
 
 
     public DatabaseHelper(Context context) {
@@ -73,7 +73,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // on upgrade drop older tables
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACT);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MESSAGE);
-        Log.d(LOG, "onUpdate database called");
+        Log.d(LOG, "onUpdate database called" + TABLE_MESSAGE);
 
         // create new tables
         onCreate(db);
@@ -147,13 +147,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public void updateContactCounterDate(Contact contact) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String[] args = {contact.getContact()};
+        ContentValues values = new ContentValues();
+        values.put(KEY_COUNTER, contact.getCounter());
+        values.put(KEY_LAST_MSGDATE, contact.getMsgDate());
+
+        // updating row
+        db.update(TABLE_CONTACT, values, KEY_NAME + " =?", args);
+    }
+
     // Delete single Contact
     public void deleteContact(Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] args = {contact.getContact()};
-        db.delete(TABLE_CONTACT, KEY_NAME + " = ?", args);
+        db.delete(TABLE_CONTACT, KEY_NAME + " =?", args);
         db.close();
     }
+
+    // Delete all Messages from Contact
+    public void deleteMessages(long id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String[] args = {String.valueOf(id)};
+        db.delete(TABLE_MESSAGE, KEY_CONTACT_ID + " =?", args);
+        db.close();
+    }
+
 
     // Insert new Message
     public void addMessage(Message message, long id) {
@@ -164,8 +185,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_IS_ME, message.isMe());
         values.put(KEY_DATE, message.getMsgDate());
         values.put(KEY_CONTACT_ID, id);
-
-       // onUpgrade(db, DATABASE_VERSION, DATABASE_VERSION+1);
 
         db.insert(TABLE_MESSAGE, null, values);
     }

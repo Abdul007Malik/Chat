@@ -33,6 +33,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_below="@+id/contact"
         android:textSize="10dp"
+        android:textColor="@android:color/holo_red_dark"
         android:layout_toRightOf="@+id/avatarContainer" />
     <TextView
         android:id="@+id/msgDate"

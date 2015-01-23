@@ -31,6 +31,7 @@ public class ChatActivity extends ActionBarActivity {
     private boolean isMe;
     private Contact contact;
     private ArrayList<Message> messages;
+    private ChatAdapter adapter;
     DatabaseHelper helper = new DatabaseHelper(this);
     private long contactId;
 
@@ -52,38 +53,46 @@ public class ChatActivity extends ActionBarActivity {
         setTitle(contact.getContact());
 
         contact.setCounter(0);
+        helper.updateContactCounterDate(contact);
         isMe = true;
 
         messages = helper.getAllMessages(contactId);
-        final ChatAdapter adapter = new ChatAdapter(this, messages);
+        adapter = new ChatAdapter(this, messages);
+
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (newMessage.getText().toString() != null && newMessage.getText().toString().length() >0) {
 
                     sendMessage();
-                    adapter.notifyDataSetChanged();
+                    listMessages.setAdapter(adapter);
+                    refreshListView(messages);
                     hideSoftKeyboard(ChatActivity.this, v);
                     listMessages.setSelection(messages.size()-1);
                 }
             }
         });
+
         listMessages.setAdapter(adapter);
         listMessages.setSelection(messages.size()-1);
         listMessages.setDivider(null);
         Log.d("log", contact.getContact() + contact.getCounter());
 
-
     }
     private boolean sendMessage() {
         message = new Message(newMessage.getText().toString(), isMe);
-        helper.addMessage(message,contactId);
+        helper.addMessage(message, contactId);
         messages = helper.getAllMessages(contactId);
+        for (Message m: messages) {
+            Log.d("messages: ", m.getMessage());
+        }
         if (!isMe) {
             int counter = contact.getCounter() + 1;
             contact.setCounter(counter);
             displayNotification(message);
             contact.setMsgDate(message.getMsgDate());
+            Log.d("msgDate", contact.getMsgDate() + "  " + String.valueOf(contact.getCounter()));
+            helper.updateContactCounterDate(contact);
         }
         isMe = !isMe;
         /*String msgDate = message.getStringDate();
@@ -145,5 +154,11 @@ public class ChatActivity extends ActionBarActivity {
 
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         mNotificationManager.notify(notificationID, notification);
+    }
+
+    public void refreshListView(ArrayList<Message> messages) {
+        adapter.clear();
+        adapter.addAll(messages);
+        adapter.notifyDataSetChanged();
     }
 }
