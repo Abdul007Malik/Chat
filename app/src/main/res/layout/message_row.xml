@@ -18,17 +18,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:paddingLeft="10dip"
             android:textSize="20dp"
             android:text="@string/hello_world"
             android:textColor="@android:color/primary_text_light" />
+
         <TextView
             android:id="@+id/messageDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="right|bottom"
             android:text="12:00"
             android:textSize="10dp"
+            android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
     </LinearLayout>
 

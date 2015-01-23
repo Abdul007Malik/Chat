@@ -146,7 +146,7 @@ public class ChatActivity extends ActionBarActivity {
                 setContentText(message.getMessage().toString()).
                 setTicker("New Message Alert!").
                 setAutoCancel(true).
-                setSmallIcon(R.drawable.notification_icon).
+                setSmallIcon(R.drawable.notification_metro).
                 setContentIntent(resultPendingIntent).build();
 
         NotificationManager mNotificationManager =

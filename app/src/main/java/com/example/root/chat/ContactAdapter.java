@@ -26,10 +26,6 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         this.contacts = contacts;
     }
 
-    public ContactAdapter getListAdapter() {
-        return adapter;
-    }
-
     class MyViewHolder  {
         TextView contact;
         TextView counter;
