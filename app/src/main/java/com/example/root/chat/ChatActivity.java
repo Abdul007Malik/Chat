@@ -42,56 +42,99 @@ public class ChatActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Povratak na parent aktivnost
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         newMessage = (EditText) findViewById(R.id.newMessage);
         sendMessage = (Button) findViewById(R.id.sendBtn);
         listMessages = (ListView) findViewById(R.id.listChat);
+
+        //Izvuci ID koji je parent aktivnost proslijedila
         contactId = getIntent().getLongExtra("contact", 0);
+
+        // Izvuci korisnika na osnovu dobijenog ID
         contact = helper.getContact(contactId);
+
+        // Postavi title
         setTitle(contact.getContact());
 
+        // Resetuj brojac novih poruka
         contact.setCounter(0);
+
+        // Update brojaca i datuma poruke u bazi
         helper.updateContactCounterDate(contact);
         isMe = true;
 
+        // Povuci sve poruke iz baze za odredjeni korisnicki ID i strpaj u niz
         messages = helper.getAllMessages(contactId);
+
+        // Custom adapter za listu poruka
         adapter = new ChatAdapter(this, messages);
+        listMessages.setAdapter(adapter);
 
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // Provjerava unos poruke
                 if (newMessage.getText().toString() != null && newMessage.getText().toString().length() >0) {
 
+                    // Posalji poruku
                     sendMessage();
-                    listMessages.setAdapter(adapter);
+
+                    // Osvjezi listu poruka
                     refreshListView(messages);
+
+                    // Sakrij tastaturu
                     hideSoftKeyboard(ChatActivity.this, v);
+
+
                     listMessages.setSelection(messages.size()-1);
                 }
             }
         });
 
-        listMessages.setAdapter(adapter);
+        // Postavi da se prikazuje kraj liste
         listMessages.setSelection(messages.size()-1);
+
+        // Nema granice izmedju itema liste
         listMessages.setDivider(null);
         Log.d("log", contact.getContact() + contact.getCounter());
 
     }
+
+    //Funkcija za slanje poruke
     private boolean sendMessage() {
+
+        // Kreira novu poruku
         message = new Message(newMessage.getText().toString(), isMe);
+
+        // Ubaci u bazu
         helper.addMessage(message, contactId);
+
+        // Povuci sve poruke iz baze
         messages = helper.getAllMessages(contactId);
+
         for (Message m: messages) {
             Log.d("messages: ", m.getMessage());
         }
+
+        // Primljena poruka
         if (!isMe) {
+
+            // Povecaj broj primljenih poruka za 1
             int counter = contact.getCounter() + 1;
             contact.setCounter(counter);
+
+            // Prikazi notifikaciju
             displayNotification(message);
+
+
             contact.setMsgDate(message.getMsgDate());
             Log.d("msgDate", contact.getMsgDate() + "  " + String.valueOf(contact.getCounter()));
+
+            // Update baze sa novim brojacem i datumom
             helper.updateContactCounterDate(contact);
         }
         isMe = !isMe;
@@ -104,12 +147,12 @@ public class ChatActivity extends ActionBarActivity {
         return true;
     }
 
+    // Funkcija za skrivanje tastature nakon slanja poruke
     public static void hideSoftKeyboard (Activity activity, View view)
     {
         InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -121,6 +164,7 @@ public class ChatActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            // Povratak na parent aktivnost
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
@@ -129,8 +173,11 @@ public class ChatActivity extends ActionBarActivity {
         }
     }
 
+    // Funkcija za prikazivanje notifikacije kad stigne nova poruka
     protected void displayNotification(Message message) {
         Log.i("Start", "notification");
+
+        // Klik na notifikaciju ce pokrenuti aktivnost Contact
         Intent resultIntent = new Intent(this, ContactActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(ContactActivity.class);
@@ -141,6 +188,7 @@ public class ChatActivity extends ActionBarActivity {
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
 
+        // Notifikacija i njen izgled
         Notification notification = new Notification.Builder(this).
                 setContentTitle("New Message from " + contact.getContact().toString()).
                 setContentText(message.getMessage().toString()).
@@ -156,6 +204,7 @@ public class ChatActivity extends ActionBarActivity {
         mNotificationManager.notify(notificationID, notification);
     }
 
+    // Funkcija za osvjezavanje liste poruka
     public void refreshListView(ArrayList<Message> messages) {
         adapter.clear();
         adapter.addAll(messages);

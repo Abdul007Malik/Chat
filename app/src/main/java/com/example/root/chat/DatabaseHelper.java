@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
 import java.util.ArrayList;
 
 /**
@@ -55,6 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + KEY_IS_ME + " BOOLEAN," + KEY_DATE + " VARCHAR(255)," + KEY_CONTACT_ID + " INTEGER" + ")";
 
 
+    // Konstruktor
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -62,7 +62,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        // creating required tables
+        // Kreiraj tabele sa kolonama
         db.execSQL(CREATE_TABLE_CONTACT);
         db.execSQL(CREATE_TABLE_MESSAGE);
         Log.d(LOG, "onCreate database called");
@@ -70,7 +70,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // on upgrade drop older tables
+        // Upgrade tabela
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACT);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MESSAGE);
         Log.d(LOG, "onUpdate database called" + TABLE_MESSAGE);
@@ -79,7 +79,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Insert new Contact
+    // Dodavanje novog kontakta u bazu
     public long addContact(Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -94,7 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return contact_id;
     }
 
-    // Get all Contacts
+    // Povuci sve kontakte
     public ArrayList<Contact> getAllContacts() {
         ArrayList<Contact> contacts = new ArrayList<Contact>();
 
@@ -115,7 +115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return contacts;
     }
 
-    // Get single Contact
+    // Povuci kontakt na osnovu ID
     public Contact getContact(long id) {
         String[] columns = {KEY_NAME, KEY_COUNTER};
         String[] args = {String.valueOf(id)};
@@ -131,6 +131,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return contact;
     }
 
+    // Povuci kontaktov ID
     public long getContactId(Contact contact) {
         String[] column = {KEY_ID};
         String[] args = {contact.getContact()};
@@ -147,6 +148,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    // Update brojaca novih poruka i datuma poruke
     public void updateContactCounterDate(Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -159,7 +161,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.update(TABLE_CONTACT, values, KEY_NAME + " =?", args);
     }
 
-    // Delete single Contact
+    // Brisi odredjeni kontakt
     public void deleteContact(Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] args = {contact.getContact()};
@@ -167,7 +169,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Delete all Messages from Contact
+    // Brisi sve poruke za odredjenog korisnika (ID)
     public void deleteMessages(long id) {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] args = {String.valueOf(id)};
@@ -176,7 +178,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    // Insert new Message
+    // Dodaj novu poruku
     public void addMessage(Message message, long id) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -189,7 +191,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(TABLE_MESSAGE, null, values);
     }
 
-    // Get all Messages
+    // Povuci sve poruke
     public ArrayList<Message> getAllMessages(long id) {
         ArrayList<Message> messages = new ArrayList<Message>();
 

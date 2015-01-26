@@ -18,6 +18,7 @@ public class Message {
         this.message = message;
         this.isMe = isMe;
         Date date = new Date();
+        // Formatiranje datuma
         msgDate = new SimpleDateFormat("H:mm").format(date);
     }
 

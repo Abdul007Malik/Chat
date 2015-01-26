@@ -54,6 +54,8 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         String message = messageObj.getMessage();
         holder.messageView.setText(message);
         holder.messageDate.setText(messageObj.getMsgDate());
+
+        // Na osnovu posiljaoca poruke postavlja odredjeni chat bubble, poziciju i margine
         holder.singleMessageLayout.setBackgroundResource(messageObj.isMe() ? R.drawable.bubble_a : R.drawable.bubble_b);
         holder.singleMessageContainer.setGravity(messageObj.isMe() ? Gravity.RIGHT : Gravity.LEFT);
         if (messageObj.isMe()) {

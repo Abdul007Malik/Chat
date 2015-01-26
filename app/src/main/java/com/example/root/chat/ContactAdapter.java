@@ -56,6 +56,8 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         String contactName = contactObj.getContact();
         holder.contact.setText(contactName);
         int counter = contactObj.getCounter();
+
+        // Na osnovu broja novih poruka postavlja odredjeni tekst
         if (counter > 1) {
             String textCounter = String.valueOf(counter);
             holder.counter.setText(textCounter + " new messages.");
@@ -66,8 +68,11 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
             String textCounter = String.valueOf(counter);
             holder.counter.setText(textCounter + " new message.");
         }
+
+        // Avatar korisnika
         holder.avatar.setBackgroundResource(R.drawable.ic_contact_picture);
 
+        // Datum posljednje primljene poruke
         holder.msgDate.setText(contactObj.getMsgDate());
         return row;
     }

@@ -20,6 +20,8 @@ public class Contact {
         this.contact = contact;
         this.counter = counter;
         Date date = new Date();
+
+        // Formatiranje datuma
         msgDate= new SimpleDateFormat("H:mm").format(date);
     }
 
