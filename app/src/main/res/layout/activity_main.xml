@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="80dp"
-        >
+        android:visibility="visible">
     </ListView>
 
     <RelativeLayout
@@ -36,11 +36,12 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Send"
+            android:text="@string/Send"
             android:id="@+id/sendBtn"
             android:layout_alignBottom="@+id/newMessage"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"/>
+
     </RelativeLayout>
 
 </RelativeLayout>

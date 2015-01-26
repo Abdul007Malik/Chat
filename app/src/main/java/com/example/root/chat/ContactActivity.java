@@ -18,6 +18,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -27,6 +28,7 @@ public class ContactActivity extends ActionBarActivity {
     private ListView contactList;
     private ContactAdapter adapter;
     private ArrayList<Contact> contacts;
+    private TextView noConversations;
 
     //Database object
     DatabaseHelper helper = new DatabaseHelper(this);
@@ -41,6 +43,9 @@ public class ContactActivity extends ActionBarActivity {
         contacts = helper.getAllContacts();
 
         contactList = (ListView) findViewById(R.id.contactList);
+        noConversations = (TextView) findViewById(R.id.noConversations);
+
+        checkConversations();
 
         //custom adapter
         adapter = new ContactAdapter(this, contacts);
@@ -107,7 +112,9 @@ public class ContactActivity extends ActionBarActivity {
                     mode.finish();
                     // Refresh niza koji cuva kontakte i liste koja ih prikazuje
                     contacts = helper.getAllContacts();
+                    checkConversations();
                     refreshListView(contacts);
+
                     return true;
                 }
 
@@ -211,5 +218,14 @@ public class ContactActivity extends ActionBarActivity {
         adapter.clear();
         adapter.addAll(contacts);
         adapter.notifyDataSetChanged();
+    }
+
+    public void checkConversations () {
+        if (contacts.isEmpty()) {
+            contactList.setVisibility(View.GONE);
+            noConversations.setVisibility(View.VISIBLE);
+        } else  {
+            noConversations.setVisibility(View.GONE);
+        }
     }
 }

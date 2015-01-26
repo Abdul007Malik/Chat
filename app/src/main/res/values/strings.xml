@@ -10,5 +10,8 @@
     <string name="new_contact">New</string>
     <string name="delete_crime">Delete contact</string>
     <string name="title_activity_result">ResultActivity</string>
+    <string name="noConversation">No Conversations</string>
+    <string name="Send">Send</string>
+    <string name="noConversations">noConversations</string>
 
 </resources>
