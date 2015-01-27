@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:text="@string/hello_world"
             android:textColor="@android:color/primary_text_light" />
 
@@ -27,8 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|bottom"
-            android:text="12:00"
-            android:textSize="10dp"
+            android:textSize="10sp"
             android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
     </LinearLayout>

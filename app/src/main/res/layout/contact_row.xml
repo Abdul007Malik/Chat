@@ -1,30 +1,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:padding="5dip"
+    android:paddingBottom="5dp"
     android:background="@drawable/delete_background">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/avatar"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:padding="3dip"
-        android:layout_alignParentLeft="true"
-        android:id="@+id/avatarContainer">
-        <ImageView
-            android:id="@+id/avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_contact_picture"
-            android:contentDescription="" />
-        </LinearLayout>
+        android:src="@drawable/ic_contact_picture"
+        android:contentDescription=""
+        android:layout_margin="5dp"/>
 
     <TextView
         android:id="@+id/contact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/avatarContainer"
-        android:layout_toRightOf="@+id/avatarContainer"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_toRightOf="@id/avatar"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        />
 
     <TextView
         android:id="@+id/counter"
@@ -32,13 +28,16 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_below="@+id/contact"
-        android:textSize="10dp"
+        android:textSize="10sp"
         android:textColor="@android:color/holo_red_dark"
-        android:layout_toRightOf="@+id/avatarContainer" />
+        android:layout_toRightOf="@+id/avatar"
+        android:layout_alignBottom="@id/avatar"
+        android:gravity="bottom"/>
     <TextView
         android:id="@+id/msgDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:layout_alignParentRight="true"/>
 
 </RelativeLayout>

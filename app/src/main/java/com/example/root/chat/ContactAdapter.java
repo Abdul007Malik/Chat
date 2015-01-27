@@ -18,7 +18,6 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
     private Context context;
     private Contact contactObj;
     private ArrayList<Contact> contacts;
-    private ContactAdapter adapter;
 
     public ContactAdapter(Context c, ArrayList<Contact> contacts) {
         super(c, R.layout.contact_row, contacts);

@@ -50,6 +50,7 @@ public class ContactActivity extends ActionBarActivity {
         //custom adapter
         adapter = new ContactAdapter(this, contacts);
         contactList.setAdapter(adapter);
+        //contactList.setDivider(null);
 
         // Klik na item(korisnika) u listi
         contactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

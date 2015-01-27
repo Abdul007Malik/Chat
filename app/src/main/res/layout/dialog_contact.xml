@@ -6,7 +6,7 @@
         android:id="@+id/username"
         android:backgroundTint="@color/abc_background_cache_hint_selector_material_dark"
         android:textColorHint="@android:color/holo_red_dark"
-        android:inputType="textEmailAddress"
+        android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
