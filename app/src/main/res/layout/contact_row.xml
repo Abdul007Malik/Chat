@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="5dp"
+    android:padding="5dp"
     android:background="@drawable/delete_background">
 
     <ImageView
@@ -10,17 +10,18 @@
         android:layout_height="50dp"
         android:src="@drawable/ic_contact_picture"
         android:contentDescription=""
-        android:layout_margin="5dp"/>
+        android:layout_alignParentEnd="false" />
 
     <TextView
         android:id="@+id/contact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/avatar"
-        android:gravity="center"
         android:textSize="20sp"
+        android:gravity="top"
+        android:layout_marginLeft="5dp"
         android:textStyle="bold"
-        />
+        android:layout_alignTop="@+id/avatar" />
 
     <TextView
         android:id="@+id/counter"
