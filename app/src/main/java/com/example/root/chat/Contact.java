@@ -1,7 +1,6 @@
 package com.example.root.chat;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
