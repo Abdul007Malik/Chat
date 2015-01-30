@@ -63,7 +63,8 @@ public class ChatActivity extends ActionBarActivity {
         contact.setCounter(0);
 
         // Update brojaca i datuma poruke u bazi
-        helper.updateContactCounterDate(contact);
+        helper.updateContactCounter(contact);
+
         isMe = true;
 
         // Povuci sve poruke iz baze za odredjeni korisnicki ID i strpaj u niz

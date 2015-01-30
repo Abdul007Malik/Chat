@@ -18,10 +18,7 @@ public class Contact {
     public Contact(String contact, int counter) {
         this.contact = contact;
         this.counter = counter;
-        Date date = new Date();
-
-        // Formatiranje datuma
-        msgDate= new SimpleDateFormat("H:mm").format(date);
+        msgDate = getMsgDate();
     }
 
     public String getContact() {

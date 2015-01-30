@@ -39,7 +39,7 @@ public class ContactActivity extends ActionBarActivity {
         Log.d("log4", "onCreate");
         setContentView(R.layout.activity_contact);
 
-        // Povuci sve kontakte u baze i popuni niz contacts
+        // Povuci sve kontakte iz baze i popuni niz contacts
         contacts = helper.getAllContacts();
 
         contactList = (ListView) findViewById(R.id.contactList);
