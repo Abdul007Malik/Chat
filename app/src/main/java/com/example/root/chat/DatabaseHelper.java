@@ -161,7 +161,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.update(TABLE_CONTACT, values, KEY_NAME + " =?", args);
     }
 
-    // Update brojaca novih poruka i datuma poruke
+    // Update brojaca novih poruka
     public void updateContactCounter(Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
 

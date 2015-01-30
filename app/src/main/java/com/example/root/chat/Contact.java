@@ -1,8 +1,5 @@
 package com.example.root.chat;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * Created by root on 1/19/15.
  */
