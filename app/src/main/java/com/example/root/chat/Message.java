@@ -3,12 +3,10 @@ package com.example.root.chat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by root on 1/16/15.
- */
 public class Message {
     private String message, msgDate;
     private boolean isMe;
+    private Date date;
 
     public Message() {
 
@@ -17,9 +15,8 @@ public class Message {
     public Message(String message, boolean isMe) {
         this.message = message;
         this.isMe = isMe;
-        Date date = new Date();
         // Formatiranje datuma
-        msgDate = new SimpleDateFormat("H:mm").format(date);
+
     }
 
     public String getMessage() {
@@ -41,6 +38,14 @@ public class Message {
     }
 
     public String getMsgDate() {
+        date = new Date();
+        msgDate = new SimpleDateFormat("H:mm a").format(date);
+        return msgDate;
+    }
+
+    public String getMsgDateLong() {
+        date = new Date();
+        msgDate = new SimpleDateFormat("dd-MM-yyyy").format(date);
         return msgDate;
     }
 

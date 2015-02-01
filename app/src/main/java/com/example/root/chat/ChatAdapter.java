@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -39,7 +38,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        MyViewHolder holder = null;
+        MyViewHolder holder;
         View row = convertView;
 
         if (row == null) {
@@ -53,7 +52,9 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         messageObj = getItem(position);
         String message = messageObj.getMessage();
         holder.messageView.setText(message);
-        holder.messageDate.setText(messageObj.getMsgDate());
+        if (messageObj.getMsgDate() != null) {
+            holder.messageDate.setText(messageObj.getMsgDate());
+        }
 
         // Na osnovu posiljaoca poruke postavlja odredjeni chat bubble, poziciju i margine
         holder.singleMessageLayout.setBackgroundResource(messageObj.isMe() ? R.drawable.bubble_a : R.drawable.bubble_b);

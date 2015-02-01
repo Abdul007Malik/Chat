@@ -132,7 +132,7 @@ public class ChatActivity extends ActionBarActivity {
             displayNotification(message);
 
 
-            contact.setMsgDate(message.getMsgDate());
+            contact.setMsgDate(message.getMsgDateLong());
             Log.d("msgDate", contact.getMsgDate() + "  " + String.valueOf(contact.getCounter()));
 
             // Update baze sa novim brojacem i datumom
