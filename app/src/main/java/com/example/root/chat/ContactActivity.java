@@ -1,8 +1,5 @@
 package com.example.root.chat;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,20 +7,18 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 
-public class ContactActivity extends ActionBarActivity {
+public class ContactActivity extends ActionBarActivity implements NewDialog.Communicator {
 
     private ListView contactList;
     private ContactAdapter adapter;
@@ -143,58 +138,11 @@ public class ContactActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pokretanje dialoga za dodavanje novih korisnika
-        Dialog dialog = onCreateDialog(10);
-        dialog.show();
-        return true;
+        NewDialog newDialog = new NewDialog();
+        newDialog.show(getFragmentManager(),"NewDialog");
+        return false;
     }
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        final View view = inflater.inflate(R.layout.dialog_contact, null);
-        final EditText editText = (EditText) view.findViewById(R.id.username);
-
-
-        builder.setView(view)
-                .setPositiveButton("New Message", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        boolean isExist = false;
-                        //Provjerava da li korisnik sa odredjenim imenom vec postoji
-                        for (Contact c: contacts) {
-                            if (c.getContact().toString().equals(editText.getText().toString())) {
-                                isExist = true;
-                                dialog.cancel();
-                            }
-                        }
-                        if (!isExist) {
-                            //Novi objekat korisnik
-                            Contact contact = new Contact(editText.getText().toString(), 0);
-
-                            // Dodavanje korisnika u bazu
-                            long contactId = helper.addContact(contact);
-
-                            // Osvjezi listu korisnika
-                            contacts = helper.getAllContacts();
-                            refreshListView(contacts);
-
-                            // Pokreni Chat aktivnost za korisnika i proslijedi njegov ID
-                            Intent intent = new Intent(ContactActivity.this, ChatActivity.class);
-                            intent.putExtra("contact", contactId);
-                            startActivityForResult(intent, 0);
-                        }
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-        return builder.create();
-    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -228,5 +176,10 @@ public class ContactActivity extends ActionBarActivity {
         } else  {
             noConversations.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onDialogMessage(ArrayList<Contact> contacts) {
+        refreshListView(contacts);
     }
 }
