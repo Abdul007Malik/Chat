@@ -1,5 +1,6 @@
 package com.example.root.chat;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -7,6 +8,7 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -175,6 +177,7 @@ public class ChatActivity extends ActionBarActivity {
     }
 
     // Funkcija za prikazivanje notifikacije kad stigne nova poruka
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected void displayNotification(Message message) {
         Log.i("Start", "notification");
 
