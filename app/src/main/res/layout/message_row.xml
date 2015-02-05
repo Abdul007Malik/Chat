@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="20sp"
-            android:text="@string/hello_world"
+            android:text="@string/new_contact"
             android:textColor="@android:color/primary_text_light" />
 
         <TextView
