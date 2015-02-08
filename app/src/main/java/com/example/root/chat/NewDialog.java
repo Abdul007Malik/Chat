@@ -49,7 +49,7 @@ public class NewDialog extends DialogFragment {
 
                             // Osvjezi listu korisnika
                             ArrayList<Contact> contacts = helper.getAllContacts();
-                            //communicator.onDialogMessage(contacts);
+                            communicator.onDialogMessage(contacts);
 
                             // Pokreni Chat aktivnost za korisnika i proslijedi njegov ID
                             Intent intent = new Intent(getActivity().getApplicationContext(), ChatActivity.class);
