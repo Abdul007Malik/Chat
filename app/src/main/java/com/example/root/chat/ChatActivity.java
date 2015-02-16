@@ -113,6 +113,9 @@ public class ChatActivity extends ActionBarActivity {
         // Kreira novu poruku
         message = new Message(newMessage.getText().toString(), isMe);
 
+        Client client = new Client();
+        client.send(message.getMessage());
+
         // Ubaci u bazu
         helper.addMessage(message, contactId);
 
@@ -198,7 +201,7 @@ public class ChatActivity extends ActionBarActivity {
                 setContentText(message.getMessage().toString()).
                 setTicker("New Message Alert!").
                 setAutoCancel(true).
-                setSmallIcon(R.drawable.notification_icon).
+                setSmallIcon(R.drawable.message30).
                 setContentIntent(resultPendingIntent).build();
 
         NotificationManager mNotificationManager =

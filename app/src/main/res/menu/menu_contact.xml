@@ -3,15 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.root.chat.ConversationActivity">
 
-    <item
-        android:id="@+id/menu_item_new_contact"
+    <item android:id="@+id/menu_item_new_contact"
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/new_contact"
-        app:showAsAction="ifRoom|withText" />
+        app:showAsAction="ifRoom|withText"/>
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="collapseActionView" />
+    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+        android:orderInCategory="100" app:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_preferences"
+        />
 </menu>

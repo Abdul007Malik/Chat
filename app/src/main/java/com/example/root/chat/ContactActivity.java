@@ -32,7 +32,7 @@ public class ContactActivity extends ActionBarActivity implements NewDialog.Comm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("log4", "onCreate");
-        setContentView(R.layout.activity_contacts);
+        setContentView(R.layout.activity_contact);
 
         // Povuci sve kontakte iz baze i popuni niz contacts
         contacts = helper.getAllContacts();
@@ -91,7 +91,7 @@ public class ContactActivity extends ActionBarActivity implements NewDialog.Comm
 
                 @Override
                 public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                    for (int i = adapter.getCount() - 1; i >= 0; i--) {
+                    for (int i = adapter.getCount() -1; i >= 0; i--) {
                         if (contactList.isItemChecked(i)) {
 
                             // Odaberi oznacene iteme(korisnike) u listi
@@ -137,9 +137,9 @@ public class ContactActivity extends ActionBarActivity implements NewDialog.Comm
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == R.id.menu_item_new_contact) {
-            // Pokretanje dialoga za dodavanje novih korisnika
+        // Pokretanje dialoga za dodavanje novih korisnika
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_item_new_contact) {
             NewDialog newDialog = new NewDialog();
             newDialog.show(getFragmentManager(), "NewDialog");
         }
@@ -172,11 +172,11 @@ public class ContactActivity extends ActionBarActivity implements NewDialog.Comm
         adapter.notifyDataSetChanged();
     }
 
-    public void checkConversations() {
+    public void checkConversations () {
         if (contacts.isEmpty()) {
             contactList.setVisibility(View.GONE);
             noConversations.setVisibility(View.VISIBLE);
-        } else {
+        } else  {
             noConversations.setVisibility(View.GONE);
         }
     }
