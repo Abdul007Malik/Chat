@@ -14,11 +14,11 @@ import java.net.UnknownHostException;
 public class Client {
     private Socket socket;
 
-    private int SERVERPORT;
+    private int SERVER_PORT;
     private String SERVER_IP;
 
     public Client() {
-        SERVERPORT = 5000;
+        SERVER_PORT = 5000;
         SERVER_IP = "10.0.2.2";
         new Thread(new ClientThread()).start();
     }
@@ -45,7 +45,7 @@ public class Client {
             try {
                 InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
 
-                socket = new Socket(serverAddr, SERVERPORT);
+                socket = new Socket(serverAddr, SERVER_PORT);
 
             } catch (UnknownHostException e1) {
                 e1.printStackTrace();
