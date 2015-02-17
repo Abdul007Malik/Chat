@@ -36,6 +36,7 @@ public class ChatActivity extends ActionBarActivity {
     private ChatAdapter adapter;
     DatabaseHelper helper = new DatabaseHelper(this);
     private long contactId;
+    private Client client;
 
     private int notificationID = 100;
 
@@ -48,6 +49,7 @@ public class ChatActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
+        client = new Client();
         newMessage = (EditText) findViewById(R.id.newMessage);
         sendMessage = (Button) findViewById(R.id.sendBtn);
         listMessages = (ListView) findViewById(R.id.listChat);
@@ -113,8 +115,7 @@ public class ChatActivity extends ActionBarActivity {
         // Kreira novu poruku
         message = new Message(newMessage.getText().toString(), isMe);
 
-        Client client = new Client();
-        client.send(message.getMessage());
+        client.send(message.getMessage().toString());
 
         // Ubaci u bazu
         helper.addMessage(message, contactId);

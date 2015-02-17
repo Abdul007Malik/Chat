@@ -32,7 +32,7 @@ public class ContactActivity extends ActionBarActivity implements NewDialog.Comm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("log4", "onCreate");
-        setContentView(R.layout.activity_contact);
+        setContentView(R.layout.activity_contacts);
 
         // Povuci sve kontakte iz baze i popuni niz contacts
         contacts = helper.getAllContacts();
