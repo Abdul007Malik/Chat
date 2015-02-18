@@ -1,11 +1,13 @@
 package com.example.root.chat;
 
+import android.net.Uri;
+
 /**
  * Created by root on 1/19/15.
  */
 public class Contact {
 
-    private String contact, msgDate;
+    private String contact, msgDate, imageUri;
     private int counter;
 
     public Contact() {
@@ -40,5 +42,13 @@ public class Contact {
 
     public void setMsgDate(String msgDate) {
         this.msgDate = msgDate;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
 }

@@ -1,6 +1,11 @@
 package com.example.root.chat;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -25,11 +33,12 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         this.contacts = contacts;
     }
 
-    class MyViewHolder  {
+    class MyViewHolder {
         TextView contact;
         TextView counter;
         TextView msgDate;
         ImageView avatar;
+
         public MyViewHolder(View view) {
             contact = (TextView) view.findViewById(R.id.contact);
             counter = (TextView) view.findViewById(R.id.counter);
@@ -69,7 +78,25 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         }
 
         // Avatar korisnika
-        holder.avatar.setBackgroundResource(R.drawable.ic_contact_picture);
+        //holder.avatar.setBackgroundResource(R.drawable.ic_contact_picture);
+        String stringUri = contactObj.getImageUri();
+        Uri imageUri = Uri.parse(stringUri);
+        Log.d("uri", String.valueOf(imageUri));
+
+        InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(getContext().getContentResolver(), imageUri);
+        BufferedInputStream buff = new BufferedInputStream(inputStream);
+        Bitmap bitmap = BitmapFactory.decodeStream(buff);
+        if (bitmap != null) {
+            holder.avatar.setImageBitmap(bitmap);
+        } else
+            holder.avatar.setBackgroundResource(R.drawable.ic_contact_picture);
+
+        try {
+            buff.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         // Datum posljednje primljene poruke
         holder.msgDate.setText(contactObj.getMsgDate());

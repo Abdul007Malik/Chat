@@ -5,10 +5,16 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -43,6 +49,12 @@ public class NewDialog extends DialogFragment {
                         if (!isExist) {
                             //Novi objekat korisnik
                             Contact contact = new Contact(editText.getText().toString(), 0);
+
+                            // Povlaci sliku korisnika iz liste kontakta
+                            ContactsContent contactsContent = new ContactsContent(getActivity().getContentResolver());
+                            Uri imageUri = contactsContent.fetchContacts(editText.getText().toString());
+                            Log.d("uriE", String.valueOf(imageUri));
+                            contact.setImageUri(String.valueOf(imageUri));
 
                             // Dodavanje korisnika u bazu
                             long contactId = helper.addContact(contact);

@@ -18,7 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LOG = "DatabaseHelper";
 
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Database Name
     private static final String DATABASE_NAME = "chatDatabase2";
@@ -34,6 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_NAME = "name";
     private static final String KEY_COUNTER = "counter";
     private static final String KEY_LAST_MSGDATE = "last_msg_date";
+    private static final String KEY_IMAGE_URI = "image_uri";
 
     // MESSAGE Table - column names
     private static final String KEY_MESSAGE_TEXT = "text";
@@ -47,7 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_CONTACT = "CREATE TABLE "
             + TABLE_CONTACT + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME
             + " VARCHAR(255)," + KEY_COUNTER + " INTEGER," + KEY_LAST_MSGDATE
-            + " VARCHAR(255)" + ")";
+            + " VARCHAR(255)," + KEY_IMAGE_URI + " VARCHAR(255)" + ")";
 
     // MESSAGE table
     private static final String CREATE_TABLE_MESSAGE = "CREATE TABLE " + TABLE_MESSAGE
@@ -88,6 +89,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_NAME, contact.getContact());
         values.put(KEY_COUNTER, contact.getCounter());
         values.put(KEY_LAST_MSGDATE, contact.getMsgDate());
+        values.put(KEY_IMAGE_URI,contact.getImageUri());
 
         // insert row
         long contact_id = db.insert(TABLE_CONTACT, null, values);
@@ -108,6 +110,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contact.setContact((cursor.getString(cursor.getColumnIndex(KEY_NAME))));
                 contact.setCounter(cursor.getInt(cursor.getColumnIndex(KEY_COUNTER)));
                 contact.setMsgDate(cursor.getString(cursor.getColumnIndex(KEY_LAST_MSGDATE)));
+                contact.setImageUri(cursor.getString(cursor.getColumnIndex(KEY_IMAGE_URI)));
 
                 contacts.add(contact);
             } while (cursor.moveToNext());
