@@ -83,6 +83,8 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         Uri imageUri = Uri.parse(stringUri);
         Log.d("uri", String.valueOf(imageUri));
 
+        // Potrebno podesiti da ide ASYNC TASK
+        // http://stackoverflow.com/questions/15012619/displaying-a-image-when-no-contact-image-is-available
         InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(getContext().getContentResolver(), imageUri);
         BufferedInputStream buff = new BufferedInputStream(inputStream);
         Bitmap bitmap = BitmapFactory.decodeStream(buff);

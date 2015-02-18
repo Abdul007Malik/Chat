@@ -6,11 +6,14 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 import java.io.BufferedInputStream;
@@ -31,7 +34,7 @@ public class NewDialog extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_contact, null);
-        final EditText editText = (EditText) view.findViewById(R.id.username);
+        final AutoCompleteTextView editText = (AutoCompleteTextView) view.findViewById(R.id.at_Contacts);
 
         builder.setView(view)
                 .setPositiveButton("New Message", new DialogInterface.OnClickListener() {
@@ -40,18 +43,25 @@ public class NewDialog extends DialogFragment {
                         boolean isExist = false;
 
                         //Provjerava da li korisnik sa odredjenim imenom vec postoji
-                        for (Contact c: helper.getAllContacts()) {
+                        for (Contact c : helper.getAllContacts()) {
                             if (c.getContact().toString().equals(editText.getText().toString())) {
                                 isExist = true;
                                 dialog.cancel();
                             }
                         }
                         if (!isExist) {
+
+                            ContactsContent contactsContent = new ContactsContent(getActivity().getContentResolver());
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, contactsContent.getAllContactNames());
+                            editText.showDropDown();
+                            editText.setAdapter(adapter);
+                            editText.setTextColor(Color.BLACK);
+
                             //Novi objekat korisnik
                             Contact contact = new Contact(editText.getText().toString(), 0);
 
                             // Povlaci sliku korisnika iz liste kontakta
-                            ContactsContent contactsContent = new ContactsContent(getActivity().getContentResolver());
+
                             Uri imageUri = contactsContent.fetchContactImageUri(editText.getText().toString());
                             Log.d("uriE", String.valueOf(imageUri));
                             contact.setImageUri(String.valueOf(imageUri));
