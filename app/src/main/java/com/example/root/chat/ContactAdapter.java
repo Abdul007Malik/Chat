@@ -86,18 +86,14 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(getContext().getContentResolver(), imageUri);
         BufferedInputStream buff = new BufferedInputStream(inputStream);
         Bitmap bitmap = BitmapFactory.decodeStream(buff);
-        if (bitmap != null) {
+
+        if ("null".equals(stringUri) || bitmap == null) {
+            bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_contact_picture);
             holder.avatar.setImageBitmap(bitmap);
-        } else
-            holder.avatar.setBackgroundResource(R.drawable.ic_contact_picture);
-
-        try {
-            buff.close();
-            bitmap = null;
-        } catch (IOException e) {
-            e.printStackTrace();
+            //holder.avatar.setBackgroundResource(R.drawable.ic_contact_picture);
+        } else {
+            holder.avatar.setImageBitmap(bitmap);
         }
-
 
         // Datum posljednje primljene poruke
         holder.msgDate.setText(contactObj.getMsgDate());
