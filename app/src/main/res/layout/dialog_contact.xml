@@ -2,7 +2,7 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/username"
         android:backgroundTint="@color/abc_background_cache_hint_selector_material_dark"
         android:textColorHint="@android:color/holo_red_dark"
@@ -13,6 +13,7 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:hint="Add contact" />
+        android:hint="Add contact"
+        android:completionThreshold="2"/>
 
 </LinearLayout>

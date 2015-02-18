@@ -5,20 +5,21 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 
+import java.util.ArrayList;
+
 public class ContactsContent {
 
     ContentResolver contentResolver;
+    Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
+    String _ID = ContactsContract.Contacts._ID;
+    String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
+    String HAS_PHONE_NUMBER = ContactsContract.Contacts.HAS_PHONE_NUMBER;
 
     public ContactsContent(ContentResolver cr) {
         contentResolver = cr;
     }
 
-    public Uri fetchContacts(String nameContact) {
-
-        Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
-        String _ID = ContactsContract.Contacts._ID;
-        String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
-        String HAS_PHONE_NUMBER = ContactsContract.Contacts.HAS_PHONE_NUMBER;
+    public Uri fetchContactImageUri(String nameContact) {
 
         Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
         String Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
@@ -44,5 +45,17 @@ public class ContactsContent {
             }
         }
         return null;
+    }
+
+    public ArrayList<String> getAllContactNames() {
+        ArrayList<String> contactNames = new ArrayList<String>();
+        Cursor cursor = contentResolver.query(CONTENT_URI,null,null,null,null);
+
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                contactNames.add(cursor.getString(cursor.getColumnIndex(DISPLAY_NAME)));
+            }
+        }
+        return contactNames;
     }
 }

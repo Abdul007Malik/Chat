@@ -52,7 +52,7 @@ public class NewDialog extends DialogFragment {
 
                             // Povlaci sliku korisnika iz liste kontakta
                             ContactsContent contactsContent = new ContactsContent(getActivity().getContentResolver());
-                            Uri imageUri = contactsContent.fetchContacts(editText.getText().toString());
+                            Uri imageUri = contactsContent.fetchContactImageUri(editText.getText().toString());
                             Log.d("uriE", String.valueOf(imageUri));
                             contact.setImageUri(String.valueOf(imageUri));
 

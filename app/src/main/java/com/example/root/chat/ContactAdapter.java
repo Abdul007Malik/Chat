@@ -93,6 +93,7 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
 
         try {
             buff.close();
+            bitmap = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
