@@ -14,10 +14,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import static com.nostra13.universalimageloader.core.ImageLoader.*;
 
 /**
  * Created by root on 1/19/15.
@@ -28,12 +37,32 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
     private Contact contactObj;
     private ArrayList<Contact> contacts;
     private InputStream inputStream;
+    private ImageLoader imageLoader;
+    private DisplayImageOptions options;
+
+    public ImageLoader getImageLoader() {
+        return imageLoader;
+    }
 
     public ContactAdapter(Context c, ArrayList<Contact> contacts) {
         super(c, R.layout.contact_row, contacts);
         this.context = c;
         this.contacts = contacts;
 
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheOnDisc(true).cacheInMemory(true)
+                .imageScaleType(ImageScaleType.EXACTLY)
+                .displayer(new FadeInBitmapDisplayer(300)).build();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+                getContext())
+                .defaultDisplayImageOptions(defaultOptions)
+                .memoryCache(new WeakMemoryCache())
+                .discCacheSize(100 * 1024 * 1024).build();
+
+        ImageLoader.getInstance().init(config);
+
+        options = new DisplayImageOptions.Builder().cacheInMemory(true)
+                .cacheOnDisc(true).resetViewBeforeLoading(true).showImageForEmptyUri(R.drawable.ic_contact_picture).build();
     }
 
     class MyViewHolder {
@@ -88,7 +117,17 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         if ("null".equals(stringUri)) {
             holder.avatar.setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_contact_picture));
         } else {
-            new ImageLoader(imageUri, holder).execute();
+            final MyViewHolder finalHolder = holder;
+
+            ImageLoader.getInstance().loadImage(stringUri, options, new SimpleImageLoadingListener() {
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    if (loadedImage != null) {
+                        finalHolder.avatar.setImageBitmap(loadedImage);
+                    } else
+                        finalHolder.avatar.setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_contact_picture));
+                }
+            });
         }
 
 
@@ -98,31 +137,4 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         return row;
     }
 
-    private class ImageLoader extends AsyncTask<Void, Void, Bitmap> {
-
-        private Uri imageUri;
-        private MyViewHolder holder;
-
-        public ImageLoader(Uri imageUri, MyViewHolder holder) {
-            this.imageUri = imageUri;
-            this.holder = holder;
-        }
-
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            inputStream = ContactsContract.Contacts.openContactPhotoInputStream(getContext().getContentResolver(), imageUri);
-            BufferedInputStream buff = new BufferedInputStream(inputStream);
-            Bitmap bitmap = BitmapFactory.decodeStream(buff);
-            if (bitmap == null) {
-                bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_contact_picture);
-            }
-
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            holder.avatar.setImageBitmap(bitmap);
-        }
-    }
 }
