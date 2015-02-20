@@ -50,7 +50,12 @@ public class ContactsContent {
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-                contactNames.add(cursor.getString(cursor.getColumnIndex(DISPLAY_NAME)));
+                int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
+
+                if (hasPhoneNumber > 0) {
+                    contactNames.add(cursor.getString(cursor.getColumnIndex(DISPLAY_NAME)));
+                }
+
             }
         }
         return contactNames;
