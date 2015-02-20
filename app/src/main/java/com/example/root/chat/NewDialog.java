@@ -31,6 +31,7 @@ public class NewDialog extends DialogFragment {
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_contact, null);
 
         final AutoCompleteTextView editText = (AutoCompleteTextView) view.findViewById(R.id.at_Contacts);
+        final AutoCompleteTextView editText2 = (AutoCompleteTextView) view.findViewById(R.id.at_Contact_Number);
 
         // Rad sa bazom kontakata
         final ContactsContent contactsContent = new ContactsContent(getActivity().getContentResolver());
@@ -40,6 +41,22 @@ public class NewDialog extends DialogFragment {
         editText.setThreshold(1);
         editText.setAdapter(adapter);
 
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, contactsContent.getAllContactNumbers());
+        editText2.setThreshold(1);
+        editText2.setAdapter(adapter2);
+
+       /* ArrayList<String> names = contactsContent.getAllContactNames();
+        ArrayList<String> numbers = contactsContent.getAllContactNumbers();
+        ArrayList<Contact> contacts = new ArrayList<Contact>();
+        for (int i = 0; i < names.size(); i++) {
+            Contact contact = new Contact();
+            contact.setContact(names.get(i));
+            contact.setPhone(numbers.get(i));
+            contacts.add(contact);
+        }
+        DialogAdapter dialogAdapter = new DialogAdapter(getActivity(), contacts);
+        editText.setThreshold(1);
+        editText.setAdapter(dialogAdapter);*/
 
         // Dialog sa pozitivnim i negativnim button-om
         builder.setView(view)
