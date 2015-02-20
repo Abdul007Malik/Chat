@@ -7,7 +7,7 @@ import android.net.Uri;
  */
 public class Contact {
 
-    private String contact, msgDate, imageUri;
+    private String contact, msgDate, imageUri, phone;
     private int counter;
 
     public Contact() {
@@ -50,5 +50,13 @@ public class Contact {
 
     public void setImageUri(String imageUri) {
         this.imageUri = imageUri;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }
