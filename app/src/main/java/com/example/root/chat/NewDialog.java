@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
@@ -34,8 +35,19 @@ public class NewDialog extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_contact, null);
+
         final AutoCompleteTextView editText = (AutoCompleteTextView) view.findViewById(R.id.at_Contacts);
 
+        // Rad sa bazom kontakata
+        final ContactsContent contactsContent = new ContactsContent(getActivity().getContentResolver());
+
+        // AutoComplete box koji radi sa imenima korisnika
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, contactsContent.getAllContactNames());
+        editText.setThreshold(1);
+        editText.setAdapter(adapter);
+
+
+        // Dialog sa pozitivnim i negativnim button-om
         builder.setView(view)
                 .setPositiveButton("New Message", new DialogInterface.OnClickListener() {
                     @Override
@@ -47,15 +59,11 @@ public class NewDialog extends DialogFragment {
                             if (c.getContact().toString().equals(editText.getText().toString())) {
                                 isExist = true;
                                 dialog.cancel();
+                                String name = editText.getText().toString();
+                                Toast.makeText(getActivity(), "Conversation with " + name + " already exists.", Toast.LENGTH_SHORT).show();
                             }
                         }
                         if (!isExist) {
-
-                            ContactsContent contactsContent = new ContactsContent(getActivity().getContentResolver());
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, contactsContent.getAllContactNames());
-                            editText.showDropDown();
-                            editText.setAdapter(adapter);
-                            editText.setTextColor(Color.BLACK);
 
                             //Novi objekat korisnik
                             Contact contact = new Contact(editText.getText().toString(), 0);
