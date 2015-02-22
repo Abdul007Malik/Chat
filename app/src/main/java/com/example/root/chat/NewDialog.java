@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
@@ -19,6 +20,10 @@ import java.util.ArrayList;
  * Created by root on 2/4/15.
  */
 public class NewDialog extends DialogFragment {
+
+    private ArrayList<String> names = new ArrayList<String>();
+    private ArrayList<String> numbers = new ArrayList<String>();
+    private ArrayList<String> contactsNameNumber = new ArrayList<String>();
 
     private Communicator communicator;
     @Override
@@ -31,32 +36,37 @@ public class NewDialog extends DialogFragment {
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_contact, null);
 
         final AutoCompleteTextView editText = (AutoCompleteTextView) view.findViewById(R.id.at_Contacts);
-        final AutoCompleteTextView editText2 = (AutoCompleteTextView) view.findViewById(R.id.at_Contact_Number);
 
         // Rad sa bazom kontakata
         final ContactsContent contactsContent = new ContactsContent(getActivity().getContentResolver());
 
+        //lista imena i brojeva telefona
+        names = contactsContent.getAllContactNames();
+        numbers = contactsContent.getAllContactNumbers();
+
+        // lista koja sadrzi imena i brojeve telefona zajedno
+        for (int i = 0; i < names.size(); i++) {
+            String string = names.get(i) + " - " + numbers.get(i);
+            contactsNameNumber.add(string);
+        }
+
         // AutoComplete box koji radi sa imenima korisnika
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, contactsContent.getAllContactNames());
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, contactsNameNumber);
         editText.setThreshold(1);
         editText.setAdapter(adapter);
+        editText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String contact = (String) parent.getAdapter().getItem(position);
+                String[] parts = contact.split(" - ");
+                String name = parts[0];
+                String number = parts[1];
+                editText.setText(name);
+            }
+        });
 
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, contactsContent.getAllContactNumbers());
-        editText2.setThreshold(1);
-        editText2.setAdapter(adapter2);
 
-       /* ArrayList<String> names = contactsContent.getAllContactNames();
-        ArrayList<String> numbers = contactsContent.getAllContactNumbers();
-        ArrayList<Contact> contacts = new ArrayList<Contact>();
-        for (int i = 0; i < names.size(); i++) {
-            Contact contact = new Contact();
-            contact.setContact(names.get(i));
-            contact.setPhone(numbers.get(i));
-            contacts.add(contact);
-        }
-        DialogAdapter dialogAdapter = new DialogAdapter(getActivity(), contacts);
-        editText.setThreshold(1);
-        editText.setAdapter(dialogAdapter);*/
 
         // Dialog sa pozitivnim i negativnim button-om
         builder.setView(view)
