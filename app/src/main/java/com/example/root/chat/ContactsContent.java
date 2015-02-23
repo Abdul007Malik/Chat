@@ -44,21 +44,34 @@ public class ContactsContent {
         return null;
     }
 
-    public ArrayList<String> getAllContactNames() {
-        ArrayList<String> contactNames = new ArrayList<String>();
+    public ArrayList<ContactEntry> getAllContactNames() {
+        ArrayList<ContactEntry> contacts = new ArrayList<ContactEntry>();
+        Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        String Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
+        String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
+        String TYPE = ContactsContract.CommonDataKinds.Phone.TYPE;
         Cursor cursor = contentResolver.query(CONTENT_URI,null,null,null,null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-                int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
+                String contact_id = cursor.getString(cursor.getColumnIndex(_ID));
+                String name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
 
+                int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
                 if (hasPhoneNumber > 0) {
-                    contactNames.add(cursor.getString(cursor.getColumnIndex(DISPLAY_NAME)));
+                    Cursor phoneCursor = contentResolver.query(PhoneCONTENT_URI, null, Phone_CONTACT_ID + " = ?", new String[]{contact_id}, null);
+
+                    while (phoneCursor.moveToNext()) {
+                        String number = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
+                        int type = phoneCursor.getInt(phoneCursor.getColumnIndex(TYPE));
+                        ContactEntry entry = new ContactEntry(name, number, ContactsContract.CommonDataKinds.Phone.getTypeLabelResource(type));
+                        contacts.add(entry);
+                    }
                 }
 
             }
         }
-        return contactNames;
+        return contacts;
     }
 
     public ArrayList<String> getAllContactNumbers() {
@@ -89,5 +102,28 @@ public class ContactsContent {
             }
         }
         return contactNumbers;
+    }
+
+    public class ContactEntry {
+        private String name, number;
+        private int type;
+
+        public ContactEntry(String name, String number, int type) {
+            this.name = name;
+            this.number = number;
+            this.type = type;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getNumber() {
+            return number;
+        }
+
+        public int getType() {
+            return type;
+        }
     }
 }

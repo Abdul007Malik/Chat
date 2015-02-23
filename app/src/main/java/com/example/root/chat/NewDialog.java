@@ -21,8 +21,6 @@ import java.util.ArrayList;
  */
 public class NewDialog extends DialogFragment {
 
-    private ArrayList<String> names = new ArrayList<String>();
-    private ArrayList<String> numbers = new ArrayList<String>();
     private ArrayList<String> contactsNameNumber = new ArrayList<String>();
 
     private Communicator communicator;
@@ -41,12 +39,12 @@ public class NewDialog extends DialogFragment {
         final ContactsContent contactsContent = new ContactsContent(getActivity().getContentResolver());
 
         //lista imena i brojeva telefona
-        names = contactsContent.getAllContactNames();
-        numbers = contactsContent.getAllContactNumbers();
+        ArrayList<ContactsContent.ContactEntry> contacts = contactsContent.getAllContactNames();
 
         // lista koja sadrzi imena i brojeve telefona zajedno
-        for (int i = 0; i < names.size(); i++) {
-            String string = names.get(i) + ": " + numbers.get(i);
+        for (int i = 0; i < contacts.size(); i++) {
+            ContactsContent.ContactEntry entry = contacts.get(i);
+            String string = entry.getName() + "\n " + entry.getNumber() + " (" + this.getString(entry.getType()) + ")";
             contactsNameNumber.add(string);
         }
 
@@ -55,11 +53,12 @@ public class NewDialog extends DialogFragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, contactsNameNumber);
         editText.setThreshold(1);
         editText.setAdapter(adapter);
+
         editText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String contact = (String) parent.getAdapter().getItem(position);
-                String[] parts = contact.split(": ");
+                String[] parts = contact.split("\n ");
                 String name = parts[0];
                 String number = parts[1];
                 editText.setText(name);

@@ -8,6 +8,7 @@
         android:layout_height="55dp"
         android:ems="10"
         android:singleLine="true"
+        android:inputType="textImeMultiLine|textMultiLine"
         android:completionThreshold="1" >
         <requestFocus/>
         </AutoCompleteTextView>
