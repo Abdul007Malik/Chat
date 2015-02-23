@@ -46,7 +46,7 @@ public class NewDialog extends DialogFragment {
 
         // lista koja sadrzi imena i brojeve telefona zajedno
         for (int i = 0; i < names.size(); i++) {
-            String string = names.get(i) + " - " + numbers.get(i);
+            String string = names.get(i) + ": " + numbers.get(i);
             contactsNameNumber.add(string);
         }
 
@@ -59,7 +59,7 @@ public class NewDialog extends DialogFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String contact = (String) parent.getAdapter().getItem(position);
-                String[] parts = contact.split(" - ");
+                String[] parts = contact.split(": ");
                 String name = parts[0];
                 String number = parts[1];
                 editText.setText(name);
