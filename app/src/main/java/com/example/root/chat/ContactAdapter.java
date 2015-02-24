@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +20,8 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-
-import static com.nostra13.universalimageloader.core.ImageLoader.*;
 
 /**
  * Created by root on 1/19/15.
@@ -126,6 +121,7 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
                         finalHolder.avatar.setImageBitmap(loadedImage);
                     } else
                         finalHolder.avatar.setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_contact_picture));
+
                 }
             });
         }

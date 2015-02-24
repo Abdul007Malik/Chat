@@ -2,15 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/app_bar"
+        android:id="@+id/appBar" />
 
     <ListView
         android:id="@+id/listChat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="80dp"
-        android:visibility="visible">
-    </ListView>
+        android:visibility="visible"
+        android:layout_below="@id/appBar"></ListView>
 
     <RelativeLayout
         android:id="@+id/form"
@@ -41,7 +45,7 @@
             android:id="@+id/sendBtn"
             android:layout_alignBottom="@+id/newMessage"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 

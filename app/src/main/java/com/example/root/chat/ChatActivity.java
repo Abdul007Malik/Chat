@@ -8,10 +8,15 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +25,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.util.ArrayList;
 
@@ -37,6 +51,8 @@ public class ChatActivity extends ActionBarActivity {
     DatabaseHelper helper = new DatabaseHelper(this);
     private long contactId;
     private Client client;
+    private Toolbar toolbar;
+    private DisplayImageOptions options;
 
     private int notificationID = 100;
 
@@ -45,9 +61,12 @@ public class ChatActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
 
-        // Povratak na parent aktivnost
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar = (Toolbar) findViewById(R.id.appBar);
+        setSupportActionBar(toolbar);
 
+        // Povratak na parent aktivnost
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         client = new Client();
         newMessage = (EditText) findViewById(R.id.newMessage);
@@ -60,8 +79,68 @@ public class ChatActivity extends ActionBarActivity {
         // Izvuci korisnika na osnovu dobijenog ID
         contact = helper.getContact(contactId);
 
-        // Postavi title
-        setTitle(contact.getContact());
+        Log.d("imageuri", contact.getContact());
+
+        // Postavi contact photo
+
+        ContactsContent entry = new ContactsContent(getContentResolver());
+        Uri uri = entry.fetchContactImageUri(contact.getContact());
+
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheOnDisc(true).cacheInMemory(true)
+                .imageScaleType(ImageScaleType.EXACTLY).showImageOnLoading(R.drawable.ic_contact_picture)
+                .displayer(new FadeInBitmapDisplayer(300)).build();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+                getApplicationContext())
+                .defaultDisplayImageOptions(defaultOptions)
+                .memoryCache(new WeakMemoryCache())
+                .discCacheSize(100 * 1024 * 1024).build();
+
+        ImageLoader.getInstance().init(config);
+
+        if ("null".equals(String.valueOf(uri))) {
+            getSupportActionBar().setIcon(R.drawable.ic_contact_picture);
+            getSupportActionBar().setTitle(contact.getContact());
+        } else {
+            options = new DisplayImageOptions.Builder().cacheInMemory(true)
+                    .cacheOnDisc(true).resetViewBeforeLoading(true).build();
+            ImageLoader.getInstance().loadImage(String.valueOf(uri), options, new SimpleImageLoadingListener() {
+               /* @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    if (loadedImage != null) {
+                        Drawable drawable = new BitmapDrawable(getResources(), loadedImage);
+                        //getSupportActionBar().setLogo(drawable);
+                        toolbar.setLogo(drawable);
+                        getSupportActionBar().setTitle(contact.getContact());
+                    } else {
+                        getSupportActionBar().setIcon(R.drawable.ic_contact_picture);
+                        getSupportActionBar().setTitle(contact.getContact());
+                    }
+                }*/
+
+                @Override
+                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                    super.onLoadingFailed(imageUri, view, failReason);
+                    Log.d("loading", "loading failed");
+                    getSupportActionBar().setIcon(R.drawable.ic_contact_picture);
+                    getSupportActionBar().setTitle(contact.getContact());
+                }
+
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    super.onLoadingComplete(imageUri, view, loadedImage);
+                    if (loadedImage != null) {
+                        Drawable drawable = new BitmapDrawable(getResources(), loadedImage);
+                        //getSupportActionBar().setLogo(drawable);
+                        toolbar.setLogo(drawable);
+                        getSupportActionBar().setTitle(contact.getContact());
+                    } else {
+                        getSupportActionBar().setIcon(R.drawable.ic_contact_picture);
+                        getSupportActionBar().setTitle(contact.getContact());
+                    }
+                }
+            });
+        }
 
         // Resetuj brojac novih poruka
         contact.setCounter(0);

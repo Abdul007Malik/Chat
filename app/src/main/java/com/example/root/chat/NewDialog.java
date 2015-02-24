@@ -24,6 +24,7 @@ public class NewDialog extends DialogFragment {
     private ArrayList<String> contactsNameNumber = new ArrayList<String>();
 
     private Communicator communicator;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -35,6 +36,9 @@ public class NewDialog extends DialogFragment {
 
         final AutoCompleteTextView editText = (AutoCompleteTextView) view.findViewById(R.id.at_Contacts);
 
+        /**
+         * TODO: async task za rad sa kontaktima
+         */
         // Rad sa bazom kontakata
         final ContactsContent contactsContent = new ContactsContent(getActivity().getContentResolver());
 
@@ -64,7 +68,6 @@ public class NewDialog extends DialogFragment {
                 editText.setText(name);
             }
         });
-
 
 
         // Dialog sa pozitivnim i negativnim button-om

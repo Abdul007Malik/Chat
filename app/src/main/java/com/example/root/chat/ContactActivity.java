@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ContextMenu;
@@ -24,6 +25,7 @@ public class ContactActivity extends ActionBarActivity implements NewDialog.Comm
     private ContactAdapter adapter;
     private ArrayList<Contact> contacts;
     private TextView noConversations;
+    private Toolbar toolbar;
 
     //Database object
     DatabaseHelper helper = new DatabaseHelper(this);
@@ -33,6 +35,9 @@ public class ContactActivity extends ActionBarActivity implements NewDialog.Comm
         super.onCreate(savedInstanceState);
         Log.d("log4", "onCreate");
         setContentView(R.layout.activity_contacts);
+        toolbar = (Toolbar) findViewById(R.id.appBar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // Povuci sve kontakte iz baze i popuni niz contacts
         contacts = helper.getAllContacts();
