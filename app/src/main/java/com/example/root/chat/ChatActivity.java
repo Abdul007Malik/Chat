@@ -131,7 +131,6 @@ public class ChatActivity extends ActionBarActivity {
                     super.onLoadingComplete(imageUri, view, loadedImage);
                     if (loadedImage != null) {
                         Drawable drawable = new BitmapDrawable(getResources(), loadedImage);
-                        //getSupportActionBar().setLogo(drawable);
                         toolbar.setLogo(drawable);
                         getSupportActionBar().setTitle(contact.getContact());
                     } else {
@@ -162,7 +161,7 @@ public class ChatActivity extends ActionBarActivity {
             public void onClick(View v) {
 
                 // Provjerava unos poruke
-                if (newMessage.getText().toString() != null && newMessage.getText().toString().length() >0) {
+                if (newMessage.getText().toString() != null && newMessage.getText().toString().length() > 0) {
 
                     // Posalji poruku
                     sendMessage();
@@ -174,13 +173,13 @@ public class ChatActivity extends ActionBarActivity {
                     hideSoftKeyboard(ChatActivity.this, v);
 
 
-                    listMessages.setSelection(messages.size()-1);
+                    listMessages.setSelection(messages.size() - 1);
                 }
             }
         });
 
         // Postavi da se prikazuje kraj liste
-        listMessages.setSelection(messages.size()-1);
+        listMessages.setSelection(messages.size() - 1);
 
         // Nema granice izmedju itema liste
         listMessages.setDivider(null);
@@ -202,7 +201,7 @@ public class ChatActivity extends ActionBarActivity {
         // Povuci sve poruke iz baze
         messages = helper.getAllMessages(contactId);
 
-        for (Message m: messages) {
+        for (Message m : messages) {
             Log.d("messages: ", m.getMessage());
         }
 
@@ -234,9 +233,8 @@ public class ChatActivity extends ActionBarActivity {
     }
 
     // Funkcija za skrivanje tastature nakon slanja poruke
-    public static void hideSoftKeyboard (Activity activity, View view)
-    {
-        InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+    public static void hideSoftKeyboard(Activity activity, View view) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
     }
 
