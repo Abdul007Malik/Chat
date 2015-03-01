@@ -1,16 +1,19 @@
 package com.example.root.chat;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 
@@ -35,12 +38,12 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         TextView contact;
         TextView counter;
         TextView msgDate;
-        ImageView avatar;
+        BootstrapCircleThumbnail avatar;
 
         public MyViewHolder(View view) {
             contact = (TextView) view.findViewById(R.id.contact);
             counter = (TextView) view.findViewById(R.id.counter);
-            avatar = (ImageView) view.findViewById(R.id.avatar);
+            avatar = (BootstrapCircleThumbnail) view.findViewById(R.id.thumbnailOneTest);
             msgDate = (TextView) view.findViewById(R.id.msgDate);
         }
     }
@@ -79,7 +82,24 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         String stringUri = String.valueOf(contactObj.getImageUri());
         Uri imageUri = Uri.parse(stringUri);
         Log.d("uri", String.valueOf(imageUri));
-        Picasso.with(getContext()).load(imageUri).placeholder(R.drawable.ic_contact_picture).error(R.drawable.ic_contact_picture).into(holder.avatar);
+        final MyViewHolder finalHolder = holder;
+        Target target = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                finalHolder.avatar.setImage(bitmap);
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+                finalHolder.avatar.setImage(R.drawable.ic_contact_picture);
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                finalHolder.avatar.setImage(R.drawable.ic_contact_picture);
+            }
+        };
+        Picasso.with(getContext()).load(imageUri).placeholder(R.drawable.ic_contact_picture).error(R.drawable.ic_contact_picture).into(target);
 
         // Datum posljednje primljene poruke
         holder.msgDate.setText(contactObj.getMsgDate());

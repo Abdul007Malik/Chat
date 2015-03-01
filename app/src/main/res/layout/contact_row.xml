@@ -1,26 +1,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:padding="5dp"
     android:background="@drawable/delete_background">
 
-    <ImageView
-        android:id="@+id/avatar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_contact_picture"
-        android:contentDescription="" />
+    <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
+        android:id="@+id/thumbnailOneTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        bootstrap:bct_size="small" />
 
     <TextView
         android:id="@+id/contact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/avatar"
+        android:layout_toRightOf="@id/thumbnailOneTest"
         android:textSize="20sp"
         android:gravity="top"
         android:layout_marginLeft="5dp"
         android:textStyle="bold"
-        android:layout_alignTop="@+id/avatar" />
+        android:layout_alignTop="@+id/thumbnailOneTest" />
 
     <TextView
         android:id="@+id/counter"
@@ -30,14 +30,15 @@
         android:layout_below="@+id/contact"
         android:textSize="10sp"
         android:textColor="@android:color/holo_red_dark"
-        android:layout_toRightOf="@+id/avatar"
-        android:layout_alignBottom="@id/avatar"
-        android:gravity="bottom"/>
+        android:layout_toRightOf="@+id/thumbnailOneTest"
+        android:layout_alignBottom="@id/thumbnailOneTest"
+        android:gravity="bottom" />
+
     <TextView
         android:id="@+id/msgDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true" />
 
 </RelativeLayout>

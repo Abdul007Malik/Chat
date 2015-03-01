@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
+    xmlns:bootstrapbutton="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
@@ -38,11 +40,15 @@
             android:layout_alignParentStart="true"
             android:layout_toLeftOf="@+id/sendBtn" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/Send"
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:layout_width="80dp"
             android:id="@+id/sendBtn"
+            android:layout_height="45dp"
+            android:layout_margin="8dp"
+            android:text="Send"
+            bootstrapbutton:bb_size="small"
+            bootstrap:bb_type="primary"
+            bootstrapbutton:bb_roundedCorners="true"
             android:layout_alignBottom="@+id/newMessage"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
