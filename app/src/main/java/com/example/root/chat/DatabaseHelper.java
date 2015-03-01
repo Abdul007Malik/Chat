@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LOG = "DatabaseHelper";
 
     // Database Version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 6;
 
     // Database Name
     private static final String DATABASE_NAME = "chatDatabase2";
@@ -33,7 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // CONTACT Table - column names
     private static final String KEY_NAME = "name";
     private static final String KEY_COUNTER = "counter";
-    private static final String KEY_LAST_MSGDATE = "last_msg_date";
+    private static final String KEY_LAST_MSG_DATE = "last_msg_date";
     private static final String KEY_IMAGE_URI = "image_uri";
 
     // MESSAGE Table - column names
@@ -47,7 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // CONTACT table
     private static final String CREATE_TABLE_CONTACT = "CREATE TABLE "
             + TABLE_CONTACT + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME
-            + " VARCHAR(255)," + KEY_COUNTER + " INTEGER," + KEY_LAST_MSGDATE
+            + " VARCHAR(255)," + KEY_COUNTER + " INTEGER," + KEY_LAST_MSG_DATE
             + " VARCHAR(255)," + KEY_IMAGE_URI + " VARCHAR(255)" + ")";
 
     // MESSAGE table
@@ -88,8 +89,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, contact.getContact());
         values.put(KEY_COUNTER, contact.getCounter());
-        values.put(KEY_LAST_MSGDATE, contact.getMsgDate());
-        values.put(KEY_IMAGE_URI,contact.getImageUri());
+        values.put(KEY_LAST_MSG_DATE, contact.getMsgDate());
+        values.put(KEY_IMAGE_URI, String.valueOf(contact.getImageUri()));
 
         // insert row
         long contact_id = db.insert(TABLE_CONTACT, null, values);
@@ -109,8 +110,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 Contact contact = new Contact();
                 contact.setContact((cursor.getString(cursor.getColumnIndex(KEY_NAME))));
                 contact.setCounter(cursor.getInt(cursor.getColumnIndex(KEY_COUNTER)));
-                contact.setMsgDate(cursor.getString(cursor.getColumnIndex(KEY_LAST_MSGDATE)));
-                contact.setImageUri(cursor.getString(cursor.getColumnIndex(KEY_IMAGE_URI)));
+                contact.setMsgDate(cursor.getString(cursor.getColumnIndex(KEY_LAST_MSG_DATE)));
+                contact.setImageUri(Uri.parse(cursor.getString(cursor.getColumnIndex(KEY_IMAGE_URI))));
 
                 contacts.add(contact);
             } while (cursor.moveToNext());
@@ -121,7 +122,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Povuci kontakt na osnovu ID
     public Contact getContact(long id) {
-        String[] columns = {KEY_NAME, KEY_COUNTER};
+        String[] columns = {KEY_NAME, KEY_COUNTER, KEY_IMAGE_URI};
         String[] args = {String.valueOf(id)};
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -131,6 +132,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
 
         Contact contact = new Contact(cursor.getString(cursor.getColumnIndex(KEY_NAME)), cursor.getInt(cursor.getColumnIndex(KEY_COUNTER)));
+        contact.setImageUri(Uri.parse(cursor.getString(cursor.getColumnIndex(KEY_IMAGE_URI))));
 
         return contact;
     }
@@ -159,7 +161,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] args = {contact.getContact()};
         ContentValues values = new ContentValues();
         values.put(KEY_COUNTER, contact.getCounter());
-        values.put(KEY_LAST_MSGDATE, contact.getMsgDate());
+        values.put(KEY_LAST_MSG_DATE, contact.getMsgDate());
 
         // updating row
         db.update(TABLE_CONTACT, values, KEY_NAME + " =?", args);
@@ -218,7 +220,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 Message message = new Message();
                 message.setMessage((cursor.getString(cursor.getColumnIndex(KEY_MESSAGE_TEXT))));
-                message.setMe(cursor.getInt(cursor.getColumnIndex(KEY_IS_ME))!= 0);
+                message.setMe(cursor.getInt(cursor.getColumnIndex(KEY_IS_ME)) != 0);
                 message.setMsgDate(cursor.getString(cursor.getColumnIndex(KEY_DATE)));
 
                 messages.add(message);

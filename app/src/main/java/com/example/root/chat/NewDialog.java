@@ -95,7 +95,7 @@ public class NewDialog extends DialogFragment {
 
                             Uri imageUri = contactsContent.fetchContactImageUri(editText.getText().toString());
                             Log.d("uriE", String.valueOf(imageUri));
-                            contact.setImageUri(String.valueOf(imageUri));
+                            contact.setImageUri(imageUri);
 
                             // Dodavanje korisnika u bazu
                             long contactId = helper.addContact(contact);

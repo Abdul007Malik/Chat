@@ -26,14 +26,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 
@@ -77,44 +72,53 @@ public class ChatActivity extends ActionBarActivity {
         // Izvuci korisnika na osnovu dobijenog ID
         contact = helper.getContact(contactId);
 
-        Log.d("imageuri", contact.getContact());
+        Log.d("imageuri", String.valueOf(contact.getImageUri()));
+        getSupportActionBar().setTitle(contact.getContact());
 
 
         // Postavi contact photo
         ContactsContent entry = new ContactsContent(getContentResolver());
         Uri uri = entry.fetchContactImageUri(contact.getContact());
 
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .cacheOnDisc(true).cacheInMemory(true)
-                .imageScaleType(ImageScaleType.EXACTLY).showImageOnLoading(R.drawable.ic_contact_picture)
-                .displayer(new FadeInBitmapDisplayer(300)).build();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-                getApplicationContext())
-                .defaultDisplayImageOptions(defaultOptions)
-                .memoryCache(new WeakMemoryCache())
-                .discCacheSize(100 * 1024 * 1024).build();
+        Target target = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+                getSupportActionBar().setIcon(drawable);
+                getSupportActionBar().setTitle(contact.getContact());
+            }
 
-        ImageLoader.getInstance().init(config);
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+                Bitmap bitmap = ((BitmapDrawable) errorDrawable).getBitmap();
+                Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 120, 120, true));
+                getSupportActionBar().setIcon(d);
 
-        if ("null".equals(String.valueOf(uri))) {
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                getSupportActionBar().setIcon(R.drawable.ic_contact_picture);
+            }
+        };
+
+        if (uri == null) {
+            Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_contact_picture)).getBitmap();
+            Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 120, 120, true));
+            getSupportActionBar().setIcon(d);
+        } else {
+            Picasso.with(getApplicationContext()).load(uri).resize(120, 120).placeholder(R.drawable.ic_contact_picture).error(R.drawable.ic_contact_picture).into(target);
+        }
+
+
+/*        if ("null".equals(String.valueOf(uri))) {
             getSupportActionBar().setIcon(R.drawable.ic_contact_picture);
             getSupportActionBar().setTitle(contact.getContact());
         } else {
+            if (Picasso.with(getApplicationContext()).load(uri).)
             options = new DisplayImageOptions.Builder().cacheInMemory(true)
                     .cacheOnDisc(true).resetViewBeforeLoading(true).build();
             ImageLoader.getInstance().loadImage(String.valueOf(uri), options, new SimpleImageLoadingListener() {
-               /* @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    if (loadedImage != null) {
-                        Drawable drawable = new BitmapDrawable(getResources(), loadedImage);
-                        //getSupportActionBar().setLogo(drawable);
-                        toolbar.setLogo(drawable);
-                        getSupportActionBar().setTitle(contact.getContact());
-                    } else {
-                        getSupportActionBar().setIcon(R.drawable.ic_contact_picture);
-                        getSupportActionBar().setTitle(contact.getContact());
-                    }
-                }*/
 
                 @Override
                 public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
@@ -137,7 +141,7 @@ public class ChatActivity extends ActionBarActivity {
                     }
                 }
             });
-        }
+        }*/
 
         // Resetuj brojac novih poruka
         contact.setCounter(0);
@@ -275,6 +279,8 @@ public class ChatActivity extends ActionBarActivity {
                 setContentText(message.getMessage().toString()).
                 setTicker("New Message Alert!").
                 setAutoCancel(true).
+                setSound(Uri.parse("android.resource://"
+                        + getApplicationContext().getPackageName() + "/" + R.raw.springtime)).
                 setSmallIcon(R.drawable.message30).
                 setContentIntent(resultPendingIntent).build();
 
@@ -282,6 +288,8 @@ public class ChatActivity extends ActionBarActivity {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        //notification.defaults |= Notification.DEFAULT_SOUND;
+        notification.defaults |= Notification.DEFAULT_VIBRATE;
         mNotificationManager.notify(notificationID, notification);
     }
 
