@@ -35,6 +35,8 @@ public class ContactActivity extends ActionBarActivity implements NewDialog.Comm
         super.onCreate(savedInstanceState);
         Log.d("log4", "onCreate");
         setContentView(R.layout.activity_contacts);
+
+        //Toolbar
         toolbar = (Toolbar) findViewById(R.id.appBar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -45,12 +47,11 @@ public class ContactActivity extends ActionBarActivity implements NewDialog.Comm
         contactList = (ListView) findViewById(R.id.contactList);
         noConversations = (TextView) findViewById(R.id.noConversations);
 
-        checkConversations();
+        checkConversations();   //provjeri konverzacije
 
         //custom adapter
         adapter = new ContactAdapter(this, contacts);
         contactList.setAdapter(adapter);
-        //contactList.setDivider(null);
 
         // Klik na item(korisnika) u listi
         contactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -96,7 +97,7 @@ public class ContactActivity extends ActionBarActivity implements NewDialog.Comm
 
                 @Override
                 public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                    for (int i = adapter.getCount() -1; i >= 0; i--) {
+                    for (int i = adapter.getCount() - 1; i >= 0; i--) {
                         if (contactList.isItemChecked(i)) {
 
                             // Odaberi oznacene iteme(korisnike) u listi
@@ -177,11 +178,11 @@ public class ContactActivity extends ActionBarActivity implements NewDialog.Comm
         adapter.notifyDataSetChanged();
     }
 
-    public void checkConversations () {
+    public void checkConversations() {
         if (contacts.isEmpty()) {
             contactList.setVisibility(View.GONE);
             noConversations.setVisibility(View.VISIBLE);
-        } else  {
+        } else {
             noConversations.setVisibility(View.GONE);
         }
     }

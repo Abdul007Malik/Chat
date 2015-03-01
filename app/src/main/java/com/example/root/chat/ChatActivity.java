@@ -50,7 +50,6 @@ public class ChatActivity extends ActionBarActivity {
     private ChatAdapter adapter;
     DatabaseHelper helper = new DatabaseHelper(this);
     private long contactId;
-    private Client client;
     private Toolbar toolbar;
     private DisplayImageOptions options;
 
@@ -68,7 +67,6 @@ public class ChatActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        client = new Client();
         newMessage = (EditText) findViewById(R.id.newMessage);
         sendMessage = (Button) findViewById(R.id.sendBtn);
         listMessages = (ListView) findViewById(R.id.listChat);
@@ -81,8 +79,8 @@ public class ChatActivity extends ActionBarActivity {
 
         Log.d("imageuri", contact.getContact());
 
-        // Postavi contact photo
 
+        // Postavi contact photo
         ContactsContent entry = new ContactsContent(getContentResolver());
         Uri uri = entry.fetchContactImageUri(contact.getContact());
 
@@ -192,8 +190,6 @@ public class ChatActivity extends ActionBarActivity {
 
         // Kreira novu poruku
         message = new Message(newMessage.getText().toString(), isMe);
-
-        client.send(message.getMessage().toString());
 
         // Ubaci u bazu
         helper.addMessage(message, contactId);
