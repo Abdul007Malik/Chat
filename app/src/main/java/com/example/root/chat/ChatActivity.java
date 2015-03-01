@@ -26,7 +26,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -46,7 +45,6 @@ public class ChatActivity extends ActionBarActivity {
     DatabaseHelper helper = new DatabaseHelper(this);
     private long contactId;
     private Toolbar toolbar;
-    private DisplayImageOptions options;
 
     private int notificationID = 100;
 
@@ -77,8 +75,7 @@ public class ChatActivity extends ActionBarActivity {
 
 
         // Postavi contact photo
-        ContactsContent entry = new ContactsContent(getContentResolver());
-        Uri uri = entry.fetchContactImageUri(contact.getContact());
+        Uri uri = contact.getImageUri();
 
         Target target = new Target() {
             @Override
@@ -110,38 +107,6 @@ public class ChatActivity extends ActionBarActivity {
             Picasso.with(getApplicationContext()).load(uri).resize(120, 120).placeholder(R.drawable.ic_contact_picture).error(R.drawable.ic_contact_picture).into(target);
         }
 
-
-/*        if ("null".equals(String.valueOf(uri))) {
-            getSupportActionBar().setIcon(R.drawable.ic_contact_picture);
-            getSupportActionBar().setTitle(contact.getContact());
-        } else {
-            if (Picasso.with(getApplicationContext()).load(uri).)
-            options = new DisplayImageOptions.Builder().cacheInMemory(true)
-                    .cacheOnDisc(true).resetViewBeforeLoading(true).build();
-            ImageLoader.getInstance().loadImage(String.valueOf(uri), options, new SimpleImageLoadingListener() {
-
-                @Override
-                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                    super.onLoadingFailed(imageUri, view, failReason);
-                    Log.d("loading", "loading failed");
-                    getSupportActionBar().setIcon(R.drawable.ic_contact_picture);
-                    getSupportActionBar().setTitle(contact.getContact());
-                }
-
-                @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    super.onLoadingComplete(imageUri, view, loadedImage);
-                    if (loadedImage != null) {
-                        Drawable drawable = new BitmapDrawable(getResources(), loadedImage);
-                        toolbar.setLogo(drawable);
-                        getSupportActionBar().setTitle(contact.getContact());
-                    } else {
-                        getSupportActionBar().setIcon(R.drawable.ic_contact_picture);
-                        getSupportActionBar().setTitle(contact.getContact());
-                    }
-                }
-            });
-        }*/
 
         // Resetuj brojac novih poruka
         contact.setCounter(0);
