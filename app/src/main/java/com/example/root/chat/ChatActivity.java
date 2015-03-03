@@ -76,6 +76,8 @@ public class ChatActivity extends ActionBarActivity {
 
         // Postavi contact photo
         Uri uri = contact.getImageUri();
+        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_contact_picture)).getBitmap();
+        final Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 120, 120, true));
 
         Target target = new Target() {
             @Override
@@ -95,16 +97,15 @@ public class ChatActivity extends ActionBarActivity {
 
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
-                getSupportActionBar().setIcon(R.drawable.ic_contact_picture);
+                getSupportActionBar().setIcon(d);
             }
         };
 
+
         if (uri == null) {
-            Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_contact_picture)).getBitmap();
-            Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 120, 120, true));
             getSupportActionBar().setIcon(d);
         } else {
-            Picasso.with(getApplicationContext()).load(uri).resize(120, 120).placeholder(R.drawable.ic_contact_picture).error(R.drawable.ic_contact_picture).into(target);
+            Picasso.with(getApplicationContext()).load(uri).resize(120, 120).placeholder(d).error(d).into(target);
         }
 
 
