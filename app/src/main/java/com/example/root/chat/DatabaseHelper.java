@@ -19,7 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LOG = "DatabaseHelper";
 
     // Database Version
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     // Database Name
     private static final String DATABASE_NAME = "chatDatabase2";
@@ -33,6 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // CONTACT Table - column names
     private static final String KEY_NAME = "name";
+    private static final String KEY_NUMBER = "number";
     private static final String KEY_COUNTER = "counter";
     private static final String KEY_LAST_MSG_DATE = "last_msg_date";
     private static final String KEY_IMAGE_URI = "image_uri";
@@ -48,7 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // CONTACT table
     private static final String CREATE_TABLE_CONTACT = "CREATE TABLE "
             + TABLE_CONTACT + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME
-            + " VARCHAR(255)," + KEY_COUNTER + " INTEGER," + KEY_LAST_MSG_DATE
+            + " VARCHAR(255)," + KEY_NUMBER + " VARCHAR(255)," + KEY_COUNTER + " INTEGER," + KEY_LAST_MSG_DATE
             + " VARCHAR(255)," + KEY_IMAGE_URI + " VARCHAR(255)" + ")";
 
     // MESSAGE table
@@ -88,6 +89,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, contact.getContact());
+        values.put(KEY_NUMBER, contact.getPhone());
         values.put(KEY_COUNTER, contact.getCounter());
         values.put(KEY_LAST_MSG_DATE, contact.getMsgDate());
         values.put(KEY_IMAGE_URI, String.valueOf(contact.getImageUri()));
@@ -109,6 +111,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 Contact contact = new Contact();
                 contact.setContact((cursor.getString(cursor.getColumnIndex(KEY_NAME))));
+                contact.setPhone((cursor.getString(cursor.getColumnIndex(KEY_NUMBER))));
                 contact.setCounter(cursor.getInt(cursor.getColumnIndex(KEY_COUNTER)));
                 contact.setMsgDate(cursor.getString(cursor.getColumnIndex(KEY_LAST_MSG_DATE)));
                 contact.setImageUri(Uri.parse(cursor.getString(cursor.getColumnIndex(KEY_IMAGE_URI))));
@@ -122,7 +125,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Povuci kontakt na osnovu ID
     public Contact getContact(long id) {
-        String[] columns = {KEY_NAME, KEY_COUNTER, KEY_IMAGE_URI};
+        String[] columns = {KEY_NAME, KEY_NUMBER, KEY_COUNTER, KEY_IMAGE_URI};
         String[] args = {String.valueOf(id)};
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -132,6 +135,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
 
         Contact contact = new Contact(cursor.getString(cursor.getColumnIndex(KEY_NAME)), cursor.getInt(cursor.getColumnIndex(KEY_COUNTER)));
+        contact.setPhone(cursor.getString(cursor.getColumnIndex(KEY_NUMBER)));
         contact.setImageUri(Uri.parse(cursor.getString(cursor.getColumnIndex(KEY_IMAGE_URI))));
 
         return contact;

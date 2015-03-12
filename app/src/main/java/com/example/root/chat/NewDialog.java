@@ -97,6 +97,11 @@ public class NewDialog extends DialogFragment {
                             Log.d("uriE", String.valueOf(imageUri));
                             contact.setImageUri(imageUri);
 
+                            // Povlaci broj korisnika iz liste kontakta
+                            String phone = contactsContent.fetchContactPhoneNumber(editText.getText().toString());
+                            Log.d("phoneNumber", phone);
+                            contact.setPhone(phone);
+
                             // Dodavanje korisnika u bazu
                             long contactId = helper.addContact(contact);
 

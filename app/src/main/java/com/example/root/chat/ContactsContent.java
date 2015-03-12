@@ -44,6 +44,38 @@ public class ContactsContent {
         return null;
     }
 
+    public String fetchContactPhoneNumber(String nameContact) {
+
+        Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        String Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
+        String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
+
+        Cursor cursor = contentResolver.query(CONTENT_URI, null, null, null, null);
+
+        // Loop for every contact in the phone
+        if (cursor.getCount() > 0) {
+
+            while (cursor.moveToNext()) {
+
+                String contact_id = cursor.getString(cursor.getColumnIndex(_ID));
+                String name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
+
+                int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
+
+                if (hasPhoneNumber > 0 && nameContact.equals(name)) {
+
+                    Cursor phoneCursor = contentResolver.query(PhoneCONTENT_URI, null, Phone_CONTACT_ID + " = ?", new String[]{contact_id}, null);
+                    while (phoneCursor.moveToNext()) {
+                        String phone = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
+                        return phone;
+                    }
+
+                }
+            }
+        }
+        return null;
+    }
+
     public ArrayList<ContactEntry> getAllContactNames() {
         ArrayList<ContactEntry> contacts = new ArrayList<ContactEntry>();
         Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
@@ -74,10 +106,9 @@ public class ContactsContent {
         return contacts;
     }
 
-    public ArrayList<String> getAllContactNumbers() {
+    /*public ArrayList<String> getAllContactNumbers() {
         Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
         String Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
-        String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
         ArrayList<String> contactNumbers = new ArrayList<String>();
 
         Cursor cursor = contentResolver.query(CONTENT_URI,null,null,null,null);
@@ -102,7 +133,7 @@ public class ContactsContent {
             }
         }
         return contactNumbers;
-    }
+    }*/
 
     public class ContactEntry {
         private String name, number;
