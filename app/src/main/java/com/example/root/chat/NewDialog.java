@@ -25,7 +25,6 @@ import java.util.ArrayList;
 public class NewDialog extends DialogFragment {
 
     private ArrayList<String> contactsNameNumber = new ArrayList<String>();
-
     private Communicator communicator;
     ContactsContent contactsContent;
     DatabaseHelper helper;
