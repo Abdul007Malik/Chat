@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,8 +29,7 @@ public class NewDialog extends DialogFragment {
     private Communicator communicator;
     ContactsContent contactsContent;
     DatabaseHelper helper;
-
-    private ArrayList<ContactsContent.ContactEntry> contactsEntry;
+    Handler handler;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -51,9 +52,20 @@ public class NewDialog extends DialogFragment {
 
         // AutoComplete box koji radi sa imenima korisnika
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, contactsNameNumber);
-        editText.setThreshold(1);
-        editText.setAdapter(adapter);
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 0:
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, contactsNameNumber);
+                        editText.setThreshold(1);
+                        editText.setAdapter(adapter);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
 
         editText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -127,7 +139,6 @@ public class NewDialog extends DialogFragment {
         @Override
         protected void onPreExecute() {
             contactsContent = new ContactsContent(getActivity().getContentResolver());
-            contactsEntry = new ArrayList<>();
         }
 
         @Override
@@ -138,16 +149,13 @@ public class NewDialog extends DialogFragment {
 
         @Override
         protected void onPostExecute(ArrayList<ContactsContent.ContactEntry> contactEntries) {
-            contactsEntry = contactEntries;
-            for (int i = 0; i < contactsEntry.size(); i++) {
-                Log.d("async", contactsEntry.get(i).getName().toString());
-            }
-            for (int i = 0; i < contactsEntry.size(); i++) {
-                ContactsContent.ContactEntry entry = contactsEntry.get(i);
+            for (int i = 0; i < contactEntries.size(); i++) {
+                ContactsContent.ContactEntry entry = contactEntries.get(i);
                 String string = entry.getName() + "\n " + entry.getNumber() + " (" + getActivity().getApplicationContext().getString(entry.getType()) + ")";
                 contactsNameNumber.add(string);
                 Log.d("imena", string);
             }
+            handler.sendEmptyMessage(0);
         }
     }
 
