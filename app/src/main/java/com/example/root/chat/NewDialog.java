@@ -165,8 +165,6 @@ public class NewDialog extends DialogFragment {
 
     private String[] splitContact(String contact) {
         String[] parts = contact.split("\n ");
-        String name = parts[0];
-        String number = parts[1];
         return parts;
     }
 }
