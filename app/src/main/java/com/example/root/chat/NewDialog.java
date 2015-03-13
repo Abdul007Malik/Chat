@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,11 +25,15 @@ public class NewDialog extends DialogFragment {
     private ArrayList<String> contactsNameNumber = new ArrayList<String>();
 
     private Communicator communicator;
+    ContactsContent contactsContent;
+    DatabaseHelper helper;
+
+    private ArrayList<ContactsContent.ContactEntry> contactsEntry;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        final DatabaseHelper helper = new DatabaseHelper(getActivity());
+        helper = new DatabaseHelper(getActivity());
         communicator = (Communicator) getActivity();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -40,17 +45,9 @@ public class NewDialog extends DialogFragment {
          * TODO: async task za rad sa kontaktima
          */
         // Rad sa bazom kontakata
-        final ContactsContent contactsContent = new ContactsContent(getActivity().getContentResolver());
-
         //lista imena i brojeva telefona
-        ArrayList<ContactsContent.ContactEntry> contacts = contactsContent.getAllContactNames();
 
-        // lista koja sadrzi imena i brojeve telefona zajedno
-        for (int i = 0; i < contacts.size(); i++) {
-            ContactsContent.ContactEntry entry = contacts.get(i);
-            String string = entry.getName() + "\n " + entry.getNumber() + " (" + this.getString(entry.getType()) + ")";
-            contactsNameNumber.add(string);
-        }
+        new ContactsTaskDialogNames().execute();
 
         // AutoComplete box koji radi sa imenima korisnika
 
@@ -62,13 +59,11 @@ public class NewDialog extends DialogFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String contact = (String) parent.getAdapter().getItem(position);
-                String[] parts = contact.split("\n ");
-                String name = parts[0];
-                String number = parts[1];
-                editText.setText(name);
+                String[] parts = splitContact(contact);
+                //postavi ime
+                editText.setText(parts[0]);
             }
         });
-
 
         // Dialog sa pozitivnim i negativnim button-om
         builder.setView(view)
@@ -126,7 +121,44 @@ public class NewDialog extends DialogFragment {
         return builder.create();
     }
 
+    private class ContactsTaskDialogNames extends AsyncTask<Void, Void, ArrayList<ContactsContent.ContactEntry>> {
+
+
+        @Override
+        protected void onPreExecute() {
+            contactsContent = new ContactsContent(getActivity().getContentResolver());
+            contactsEntry = new ArrayList<>();
+        }
+
+        @Override
+        protected ArrayList<ContactsContent.ContactEntry> doInBackground(Void... params) {
+            ArrayList<ContactsContent.ContactEntry> contactEntries = contactsContent.getAllContactNames();
+            return contactEntries;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<ContactsContent.ContactEntry> contactEntries) {
+            contactsEntry = contactEntries;
+            for (int i = 0; i < contactsEntry.size(); i++) {
+                Log.d("async", contactsEntry.get(i).getName().toString());
+            }
+            for (int i = 0; i < contactsEntry.size(); i++) {
+                ContactsContent.ContactEntry entry = contactsEntry.get(i);
+                String string = entry.getName() + "\n " + entry.getNumber() + " (" + getActivity().getApplicationContext().getString(entry.getType()) + ")";
+                contactsNameNumber.add(string);
+                Log.d("imena", string);
+            }
+        }
+    }
+
     public interface Communicator {
         public void onDialogMessage(ArrayList<Contact> contacts);
+    }
+
+    private String[] splitContact(String contact) {
+        String[] parts = contact.split("\n ");
+        String name = parts[0];
+        String number = parts[1];
+        return parts;
     }
 }

@@ -141,6 +141,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return contact;
     }
 
+    // Povuci kontakt na osnovu imena
+    public Contact getContactFromName(String name) {
+        String[] columns = {KEY_NAME, KEY_NUMBER, KEY_COUNTER, KEY_IMAGE_URI};
+        String[] args = {name};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_CONTACT, columns, KEY_NAME + " =?", args, null, null, null);
+
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        Contact contact = new Contact(cursor.getString(cursor.getColumnIndex(KEY_NAME)), cursor.getInt(cursor.getColumnIndex(KEY_COUNTER)));
+        contact.setPhone(cursor.getString(cursor.getColumnIndex(KEY_NUMBER)));
+        contact.setImageUri(Uri.parse(cursor.getString(cursor.getColumnIndex(KEY_IMAGE_URI))));
+
+        return contact;
+    }
+
     // Povuci kontaktov ID
     public long getContactId(Contact contact) {
         String[] column = {KEY_ID};
