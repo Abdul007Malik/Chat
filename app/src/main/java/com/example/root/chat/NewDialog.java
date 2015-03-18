@@ -132,6 +132,7 @@ public class NewDialog extends DialogFragment {
         return builder.create();
     }
 
+    // Async task - popunjava listu imena kontakta
     private class ContactsTaskDialogNames extends AsyncTask<Void, Void, ArrayList<ContactsContent.ContactEntry>> {
 
 
