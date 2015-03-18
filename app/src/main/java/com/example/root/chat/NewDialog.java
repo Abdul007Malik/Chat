@@ -105,7 +105,7 @@ public class NewDialog extends DialogFragment {
 
                             // Povlaci broj korisnika iz liste kontakta
                             String phone = contactsContent.fetchContactPhoneNumber(editText.getText().toString());
-                            Log.d("phoneNumber", phone);
+                            //Log.d("phoneNumber", phone);
                             contact.setPhone(phone);
 
                             // Dodavanje korisnika u bazu
