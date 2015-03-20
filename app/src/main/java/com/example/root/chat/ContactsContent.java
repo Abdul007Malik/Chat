@@ -106,35 +106,6 @@ public class ContactsContent {
         return contacts;
     }
 
-    /*public ArrayList<String> getAllContactNumbers() {
-        Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-        String Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
-        ArrayList<String> contactNumbers = new ArrayList<String>();
-
-        Cursor cursor = contentResolver.query(CONTENT_URI,null,null,null,null);
-
-
-        if (cursor.getCount() > 0) {
-
-            while (cursor.moveToNext()) {
-                String contact_id = cursor.getString(cursor.getColumnIndex(_ID));
-                int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
-                if (hasPhoneNumber > 0) {
-                    Cursor phoneCursor = contentResolver.query(PhoneCONTENT_URI, null, Phone_CONTACT_ID + " = ?", new String[]{contact_id}, null);
-
-                    while (phoneCursor.moveToNext()) {
-                        contactNumbers.add(phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER)));
-
-
-                    }
-
-                    phoneCursor.close();
-                }
-            }
-        }
-        return contactNumbers;
-    }*/
-
     public class ContactEntry {
         private String name, number;
         private int type;
