@@ -28,7 +28,7 @@ public class NewDialog extends DialogFragment {
     private Communicator communicator;
     ContactsContent contactsContent;
     DatabaseHelper helper;
-    Handler handler;
+    private static Handler handler;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -42,15 +42,15 @@ public class NewDialog extends DialogFragment {
         final AutoCompleteTextView editText = (AutoCompleteTextView) view.findViewById(R.id.at_Contacts);
 
         /**
-         * TODO: async task za rad sa kontaktima
+         * Async task za rad sa kontaktima
+         * Povlaci imena i brojeve telefona
          */
-        // Rad sa bazom kontakata
-        //lista imena i brojeva telefona
 
         new ContactsTaskDialogNames().execute();
 
-        // AutoComplete box koji radi sa imenima korisnika
-
+        /**
+         * AutoComplete box koji radi sa imenima korisnika
+         */
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -76,14 +76,18 @@ public class NewDialog extends DialogFragment {
             }
         });
 
-        // Dialog sa pozitivnim i negativnim button-om
+        /**
+         * Dialog sa pozitivnim i negativnim button-om
+         */
         builder.setView(view)
                 .setPositiveButton("New Message", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         boolean isExist = false;
 
-                        //Provjerava da li korisnik sa odredjenim imenom vec postoji
+                        /**
+                         * Provjerava da li korisnik sa odredjenim imenom vec postoji
+                         */
                         for (Contact c : helper.getAllContacts()) {
                             if (c.getContact().toString().equals(editText.getText().toString())) {
                                 isExist = true;
@@ -94,28 +98,30 @@ public class NewDialog extends DialogFragment {
                         }
                         if (!isExist) {
 
-                            //Novi objekat korisnik
+                            /**
+                             * Novi objekat korisnik
+                             * Povlaci sliku korisnika iz liste kontakta
+                             * Povlaci broj korisnika iz liste kontakta
+                             */
                             Contact contact = new Contact(editText.getText().toString(), 0);
-
-                            // Povlaci sliku korisnika iz liste kontakta
-
                             Uri imageUri = contactsContent.fetchContactImageUri(editText.getText().toString());
                             Log.d("uriE", String.valueOf(imageUri));
                             contact.setImageUri(imageUri);
 
-                            // Povlaci broj korisnika iz liste kontakta
                             String phone = contactsContent.fetchContactPhoneNumber(editText.getText().toString());
-                            //Log.d("phoneNumber", phone);
                             contact.setPhone(phone);
 
-                            // Dodavanje korisnika u bazu
+                            /**
+                             * Dodaje korisnika u bazu
+                             * Osvjezava listu korisnika koristeci interface communicator
+                             */
                             long contactId = helper.addContact(contact);
-
-                            // Osvjezi listu korisnika
                             ArrayList<Contact> contacts = helper.getAllContacts();
                             communicator.onDialogMessage(contacts);
 
-                            // Pokreni Chat aktivnost za korisnika i proslijedi njegov ID
+                            /**
+                             * Pokreni Chat aktivnost za korisnika i proslijedi njegov ID
+                             */
                             Intent intent = new Intent(getActivity().getApplicationContext(), ChatActivity.class);
                             intent.putExtra("contact", contactId);
                             startActivityForResult(intent, 0);
@@ -132,7 +138,9 @@ public class NewDialog extends DialogFragment {
         return builder.create();
     }
 
-    // Async task - popunjava listu imena kontakta
+    /**
+     * Async task - popunjava listu imena kontakta
+     */
     private class ContactsTaskDialogNames extends AsyncTask<Void, Void, ArrayList<ContactsContent.ContactEntry>> {
 
 
@@ -143,6 +151,9 @@ public class NewDialog extends DialogFragment {
 
         @Override
         protected ArrayList<ContactsContent.ContactEntry> doInBackground(Void... params) {
+            /**
+             * Povuci sva imena kontakta
+             */
             ArrayList<ContactsContent.ContactEntry> contactEntries = contactsContent.getAllContactNames();
             return contactEntries;
         }
@@ -150,6 +161,9 @@ public class NewDialog extends DialogFragment {
         @Override
         protected void onPostExecute(ArrayList<ContactsContent.ContactEntry> contactEntries) {
             for (int i = 0; i < contactEntries.size(); i++) {
+                /**
+                 * Iz liste kontakta povuci ime i broj i dodaj u konacnu listu
+                 */
                 ContactsContent.ContactEntry entry = contactEntries.get(i);
                 String string = entry.getName() + "\n " + entry.getNumber() + " (" + getActivity().getApplicationContext().getString(entry.getType()) + ")";
                 contactsNameNumber.add(string);
@@ -163,6 +177,11 @@ public class NewDialog extends DialogFragment {
         public void onDialogMessage(ArrayList<Contact> contacts);
     }
 
+    /**
+     * Funkcija za dijeljenje stringa na ime i broj
+     * @param contact
+     * @return
+     */
     private String[] splitContact(String contact) {
         String[] parts = contact.split("\n ");
         return parts;

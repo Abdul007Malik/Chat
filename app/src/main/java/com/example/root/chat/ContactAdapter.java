@@ -66,7 +66,9 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         holder.contact.setText(contactName);
         int counter = contactObj.getCounter();
 
-        // Na osnovu broja novih poruka postavlja odredjeni tekst
+        /**
+         * Na osnovu broja novih poruka postavlja odredjeni tekst
+         */
         if (counter > 1) {
             String textCounter = String.valueOf(counter);
             holder.counter.setText(textCounter + " new messages.");
@@ -78,7 +80,9 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
             holder.counter.setText(textCounter + " new message.");
         }
 
-        // Avatar korisnika
+        /**
+         * Avatar korisnika
+         */
         String stringUri = String.valueOf(contactObj.getImageUri());
         Uri imageUri = Uri.parse(stringUri);
         Log.d("uri", String.valueOf(imageUri));
@@ -101,7 +105,9 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         };
         Picasso.with(getContext()).load(imageUri).placeholder(R.drawable.ic_contact_picture).error(R.drawable.ic_contact_picture).into(target);
 
-        // Datum posljednje primljene poruke
+        /**
+         * Datum posljednje primljene poruke
+         */
         holder.msgDate.setText(contactObj.getMsgDate());
         return row;
     }

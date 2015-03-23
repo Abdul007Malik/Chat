@@ -49,14 +49,27 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             holder = (MyViewHolder) row.getTag();
         }
 
+        /**
+         * Message objekat
+         */
         messageObj = getItem(position);
+
+        /**
+         * Tekst poruke
+         */
         String message = messageObj.getMessage();
         holder.messageView.setText(message);
+
+        /**
+         * Datum poruke
+         */
         if (messageObj.getMsgDate() != null) {
             holder.messageDate.setText(messageObj.getMsgDate());
         }
 
-        // Na osnovu posiljaoca poruke postavlja odredjeni chat bubble, poziciju i margine
+        /**
+         * Na osnovu posiljaoca poruke postavlja odredjeni chat bubble, poziciju i margine
+         */
         holder.singleMessageLayout.setBackgroundResource(messageObj.isMe() ? R.drawable.bubble_a : R.drawable.bubble_b);
         holder.singleMessageContainer.setGravity(messageObj.isMe() ? Gravity.RIGHT : Gravity.LEFT);
         if (messageObj.isMe()) {
