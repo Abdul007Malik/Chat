@@ -71,6 +71,7 @@ public class NewDialog extends DialogFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String contact = (String) parent.getAdapter().getItem(position);
                 String[] parts = splitContact(contact);
+                String[] parts2 = splitContact2(parts[1]);
                 //postavi ime
                 editText.setText(parts[0]);
             }
@@ -184,6 +185,11 @@ public class NewDialog extends DialogFragment {
      */
     private String[] splitContact(String contact) {
         String[] parts = contact.split("\n ");
+        return parts;
+    }
+
+    private String[] splitContact2(String contact) {
+        String[] parts = contact.split(" ");
         return parts;
     }
 }

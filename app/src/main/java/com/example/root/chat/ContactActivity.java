@@ -55,10 +55,8 @@ public class ContactActivity extends ActionBarActivity implements NewDialog.Comm
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        // Povuci sve kontakte iz baze i popuni niz contacts
         /**
          * Povuci sve konverzacije (kontakte) iz baze
-         * Popuni niz konverzacija (kontakta)
          */
         contacts = helper.getAllContacts();
 
