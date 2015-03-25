@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -38,12 +38,12 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         TextView contact;
         TextView counter;
         TextView msgDate;
-        BootstrapCircleThumbnail avatar;
+        ImageView avatar;
 
         public MyViewHolder(View view) {
             contact = (TextView) view.findViewById(R.id.contact);
             counter = (TextView) view.findViewById(R.id.counter);
-            avatar = (BootstrapCircleThumbnail) view.findViewById(R.id.thumbnailOneTest);
+            avatar = (ImageView) view.findViewById(R.id.thumbnailOneTest);
             msgDate = (TextView) view.findViewById(R.id.msgDate);
         }
     }
@@ -86,24 +86,25 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         String stringUri = String.valueOf(contactObj.getImageUri());
         Uri imageUri = Uri.parse(stringUri);
         Log.d("uri", String.valueOf(imageUri));
-        final MyViewHolder finalHolder = holder;
+
+        /*final MyViewHolder finalHolder = holder;
         Target target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                finalHolder.avatar.setImage(bitmap);
+                finalHolder.avatar.setImageBitmap(bitmap);
             }
 
             @Override
             public void onBitmapFailed(Drawable errorDrawable) {
-                finalHolder.avatar.setImage(R.drawable.ic_contact_picture);
+                finalHolder.avatar.setImageDrawable(errorDrawable);
             }
 
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
-                finalHolder.avatar.setImage(R.drawable.ic_contact_picture);
+                finalHolder.avatar.setImageDrawable(placeHolderDrawable);
             }
-        };
-        Picasso.with(getContext()).load(imageUri).placeholder(R.drawable.ic_contact_picture).error(R.drawable.ic_contact_picture).into(target);
+        };*/
+        Picasso.with(getContext()).load(imageUri).placeholder(R.drawable.ic_contact_picture).error(R.drawable.ic_contact_picture).into(holder.avatar);
 
         /**
          * Datum posljednje primljene poruke
