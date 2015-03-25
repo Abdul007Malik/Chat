@@ -53,10 +53,13 @@ public class ChatActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
 
+        // Toolbar
         toolbar = (Toolbar) findViewById(R.id.appBar);
         setSupportActionBar(toolbar);
 
-        // Povratak na parent aktivnost
+        /**
+         * Povratak na parent activity
+         */
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -64,21 +67,31 @@ public class ChatActivity extends ActionBarActivity {
         sendMessage = (BootstrapButton) findViewById(R.id.sendBtn);
         listMessages = (ListView) findViewById(R.id.listChat);
 
-        //Izvuci ID koji je parent aktivnost proslijedila
+        /**
+         * Izvuci ID koji je parent aktivnost proslijedila
+         * Izvuci korisnika na osnovu dobijenog ID
+         * Postavi title na toolbaru
+         */
         contactId = getIntent().getLongExtra("contact", 0);
-
-        // Izvuci korisnika na osnovu dobijenog ID
         contact = helper.getContact(contactId);
 
-        Log.d("imageuri", String.valueOf(contact.getImageUri()));
         getSupportActionBar().setTitle(contact.getContact());
+        Log.d("imageuri", String.valueOf(contact.getImageUri()));
 
 
-        // Postavi contact photo
+        /**
+         * Izvuci uri slike kontakta
+         * Pretvori drawable u Bitmap i nazad u drawable kako bi promijenio veliicinu
+         */
         Uri uri = contact.getImageUri();
         Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_contact_picture)).getBitmap();
         final Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 120, 120, true));
 
+        /**
+         * Picasso loader -
+         * Za uspjesnu operaciju postavi logo na toolbaru korisnikovu sliku
+         * Za neuspjesnu operaciju i preloading postavi za logo default sliku
+         */
         Target target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -102,6 +115,10 @@ public class ChatActivity extends ActionBarActivity {
         };
 
 
+        /**
+         * U slucaju da ne pronadje uri korisnika (npr. novi korisnik) postavi default sliku za logo
+         * U suprotnom neka pokusa Picasso da povuce sliku
+         */
         if (uri == null) {
             getSupportActionBar().setIcon(d);
         } else {
@@ -109,44 +126,47 @@ public class ChatActivity extends ActionBarActivity {
         }
 
 
-        // Resetuj brojac novih poruka
+        /**
+         * Kad se upali ovaj activity brojac neprocitanih poruka se resetuje
+         * Unos u bazu novih vrijednosti brojaca i datuma poruke
+         */
         contact.setCounter(0);
-
-        // Update brojaca i datuma poruke u bazi
         helper.updateContactCounter(contact);
 
         isMe = true;
 
-        // Povuci sve poruke iz baze za odredjeni korisnicki ID i strpaj u niz
+        /**
+         * Povuci sve poruke iz baze za odredjeni id korisnika
+         * Proslijedi listu poruka adapteru
+         */
         messages = helper.getAllMessages(contactId);
-
-        // Custom adapter za listu poruka
         adapter = new ChatAdapter(this, messages);
         listMessages.setAdapter(adapter);
 
+        /**
+         * Send message click event
+         */
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                // Provjerava unos poruke
-                if (newMessage.getText().toString() != null && newMessage.getText().toString().length() > 0) {
+                /**
+                 * Provjera jel pravilan unos poruke
+                 * Salje poruku
+                 * Osvjezi listu poruka
+                 * Sakrij tastaturu
+                 * Postavi da se prikazuje kraj liste
+                 */
+                if ((newMessage.getText().toString().trim().length() > 0) && (newMessage.getText().toString().trim().length() > 0)) {
 
-                    // Posalji poruku
                     sendMessage();
-
-                    // Osvjezi listu poruka
                     refreshListView(messages);
-
-                    // Sakrij tastaturu
                     hideSoftKeyboard(ChatActivity.this, v);
-
-
                     listMessages.setSelection(messages.size() - 1);
                 }
             }
         });
 
-        // Postavi da se prikazuje kraj liste
         listMessages.setSelection(messages.size() - 1);
 
         // Nema granice izmedju itema liste
@@ -155,7 +175,12 @@ public class ChatActivity extends ActionBarActivity {
 
     }
 
-    //Funkcija za slanje poruke
+    /**
+     * Funkcija za slanje poruke -
+     * Kreira novu poruku i ubacuje u bazu
+     * Provjera jel primljena ili poslana poruka
+     * @return
+     */
     private boolean sendMessage() {
 
         // Kreira novu poruku
@@ -189,16 +214,16 @@ public class ChatActivity extends ActionBarActivity {
             helper.updateContactCounterDate(contact);
         }
         isMe = !isMe;
-        /*String msgDate = message.getStringDate();
-        Intent intent = new Intent();
-        intent.putExtra("msgDate", msgDate);
-        setResult(RESULT_OK, intent);*/
         newMessage.setText("");
 
         return true;
     }
 
-    // Funkcija za skrivanje tastature nakon slanja poruke
+    /**
+     * Funkcija za skrivanje tastature nakon slanja poruke
+     * @param activity
+     * @param view
+     */
     public static void hideSoftKeyboard(Activity activity, View view) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
@@ -223,7 +248,10 @@ public class ChatActivity extends ActionBarActivity {
         }
     }
 
-    // Funkcija za prikazivanje notifikacije kad stigne nova poruka
+    /**
+     * Funkcija za prikazivanje notifikacije kad stigne nova poruka
+     * @param message
+     */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected void displayNotification(Message message) {
         Log.i("Start", "notification");
@@ -259,7 +287,10 @@ public class ChatActivity extends ActionBarActivity {
         mNotificationManager.notify(notificationID, notification);
     }
 
-    // Funkcija za osvjezavanje liste poruka
+    /**
+     * Funkcija za osvjezavanje liste poruka
+     * @param messages
+     */
     public void refreshListView(ArrayList<Message> messages) {
         adapter.clear();
         adapter.addAll(messages);
