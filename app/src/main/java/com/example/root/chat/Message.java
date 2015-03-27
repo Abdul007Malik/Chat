@@ -52,4 +52,8 @@ public class Message {
     public void setMsgDate(String msgDate) {
         this.msgDate = msgDate;
     }
+
+    public String getMsgDateOld() {
+        return msgDate;
+    }
 }

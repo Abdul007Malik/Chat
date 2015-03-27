@@ -63,8 +63,8 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         /**
          * Datum poruke
          */
-        if (messageObj.getMsgDate() != null) {
-            holder.messageDate.setText(messageObj.getMsgDate());
+        if (messageObj.getMsgDateOld() != null) {
+            holder.messageDate.setText(messageObj.getMsgDateOld());
         }
 
         /**
