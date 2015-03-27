@@ -70,7 +70,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         /**
          * Na osnovu posiljaoca poruke postavlja odredjeni chat bubble, poziciju i margine
          */
-        holder.singleMessageLayout.setBackgroundResource(messageObj.isMe() ? R.drawable.bubble_a : R.drawable.bubble_b);
+        holder.singleMessageLayout.setBackgroundResource(messageObj.isMe() ? R.drawable.send : R.drawable.receive);
         holder.singleMessageContainer.setGravity(messageObj.isMe() ? Gravity.RIGHT : Gravity.LEFT);
         if (messageObj.isMe()) {
             holder.singleMessageContainer.setPadding(50, 10, 10, 10);

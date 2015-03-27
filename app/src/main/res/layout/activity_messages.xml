@@ -40,18 +40,16 @@
             android:layout_alignParentStart="true"
             android:layout_toLeftOf="@+id/sendBtn" />
 
-        <com.beardedhen.androidbootstrap.BootstrapButton
+        <Button
             android:layout_width="80dp"
-            android:id="@+id/sendBtn"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_margin="8dp"
             android:text="Send"
-            bootstrapbutton:bb_size="small"
-            bootstrap:bb_type="primary"
-            bootstrapbutton:bb_roundedCorners="true"
+            android:id="@+id/sendBtn"
             android:layout_alignBottom="@+id/newMessage"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            />
 
     </RelativeLayout>
 

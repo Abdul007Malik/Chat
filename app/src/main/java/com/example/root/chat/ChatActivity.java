@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -36,7 +37,7 @@ public class ChatActivity extends ActionBarActivity {
 
     private ListView listMessages;
     private EditText newMessage;
-    private BootstrapButton sendMessage;
+    private Button sendMessage;
     private Message message;
     private boolean isMe;
     private Contact contact;
@@ -64,7 +65,7 @@ public class ChatActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         newMessage = (EditText) findViewById(R.id.newMessage);
-        sendMessage = (BootstrapButton) findViewById(R.id.sendBtn);
+        sendMessage = (Button) findViewById(R.id.sendBtn);
         listMessages = (ListView) findViewById(R.id.listChat);
 
         /**
