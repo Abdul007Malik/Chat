@@ -15,9 +15,14 @@ public class Message {
     public Message(String message, boolean isMe) {
         this.message = message;
         this.isMe = isMe;
-        // Formatiranje datuma
-
     }
+
+    /**
+     * TODO
+     * Formatiranje datuma:
+     *   - Ako je timestamp danasnji prikazi vrijeme
+     *   - Ako je timestamp
+     */
 
     public String getMessage() {
         return message;
@@ -30,8 +35,6 @@ public class Message {
     public boolean isMe() {
         return isMe;
     }
-
-
 
     public void setMe(boolean isMe) {
         this.isMe = isMe;

@@ -200,6 +200,26 @@ public class ChatActivity extends ActionBarActivity {
         // Primljena poruka
         if (!isMe) {
 
+            /**
+             * TODO
+             *
+             * Servici i Broadcast Receiver + Notification
+             *
+             * Kad primis Selmanov objekat izvuci iz baze objekat Contact (konverzaciju) na osnovu broja kontakta
+             * Postavi getterima nove vrijednosti za Contact objekt: datum posljednje primljene poruke, counter
+             * Dodaj novu poruku sa odgovarajucim parametrima u bazu za gore dobijenog objekta Contact
+             * Updatuj ostale podatke u bazi
+             * Refresh lista
+             *
+             * TODO
+             * U slucaju da nema objekta Contact u bazi, napravi novi objekat i dodaj u bazu
+             * Updatuj objekte contact i message u bazi
+             * Refresh lista
+             * TODO
+             * Razlikovanje novih poruka od novih brojeva ili postojecih brojeva u imeniku
+             * Prikaz u listi imena ili broja
+             */
+
             // Povecaj broj primljenih poruka za 1
             int counter = contact.getCounter() + 1;
             contact.setCounter(counter);
