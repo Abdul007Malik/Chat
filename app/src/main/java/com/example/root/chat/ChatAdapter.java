@@ -61,9 +61,19 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         holder.messageView.setText(message);
 
         /**
+         * TODO
          * Datum poruke
          */
         if (messageObj.getMsgDateOld() != null) {
+            /*String wordDate = messageObj.checkDate(messageObj.getMsgDateOld());
+            switch (wordDate) {
+                case "today":
+                    break;
+                case "this week":
+                    break;
+                case "other":
+                    break;
+            }*/
             holder.messageDate.setText(messageObj.getMsgDateOld());
         }
 

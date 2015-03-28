@@ -1,7 +1,10 @@
 package com.example.root.chat;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class Message {
     private String message, msgDate;
@@ -21,7 +24,8 @@ public class Message {
      * TODO
      * Formatiranje datuma:
      *   - Ako je timestamp danasnji prikazi vrijeme
-     *   - Ako je timestamp
+     *   - Ako timestamp nije danasnji datum prikazi dan i vrijeme
+     *   - Ako timestamp nije trenutna sedmica prikazi datum i godinu
      */
 
     public String getMessage() {
@@ -42,7 +46,7 @@ public class Message {
 
     public String getMsgDate() {
         date = new Date();
-        msgDate = new SimpleDateFormat("H:mm a").format(date);
+        msgDate = new SimpleDateFormat("H:mm").format(date);
         return msgDate;
     }
 
@@ -58,5 +62,34 @@ public class Message {
 
     public String getMsgDateOld() {
         return msgDate;
+    }
+
+    public String getMsgDateForDatabase() {
+        date = new Date();
+        msgDate = new SimpleDateFormat("EEEE, MMM dd, yyyy HH:mm").format(date);
+        return msgDate;
+    }
+
+    public String checkDate(String dateString) {
+        SimpleDateFormat format = new SimpleDateFormat("EEEE, MMM dd, yyyy HH:mm");
+
+        try {
+            Date date = format.parse(dateString);
+            Date today = new Date();
+
+            long diff = today.getTime() - date.getTime();
+            long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+
+            if (days == 0 ) {
+                return "today";
+            } else if (days < 7) {
+                return "this week";
+            } else {
+                return "other";
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
