@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -79,7 +80,6 @@ public class ChatActivity extends ActionBarActivity {
         getSupportActionBar().setTitle(contact.getContact());
         Log.d("imageuri", String.valueOf(contact.getImageUri()));
 
-
         /**
          * Izvuci uri slike kontakta
          * Pretvori drawable u Bitmap i nazad u drawable kako bi promijenio veliicinu
@@ -97,21 +97,19 @@ public class ChatActivity extends ActionBarActivity {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 Drawable drawable = new BitmapDrawable(getResources(), bitmap);
-                getSupportActionBar().setIcon(drawable);
-                getSupportActionBar().setTitle(contact.getContact());
+                toolbar.setLogo(drawable);
             }
 
             @Override
             public void onBitmapFailed(Drawable errorDrawable) {
                 Bitmap bitmap = ((BitmapDrawable) errorDrawable).getBitmap();
                 Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 120, 120, true));
-                getSupportActionBar().setIcon(d);
-
+                toolbar.setLogo(d);
             }
 
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
-                getSupportActionBar().setIcon(d);
+                toolbar.setLogo(d);
             }
         };
 
@@ -121,7 +119,7 @@ public class ChatActivity extends ActionBarActivity {
          * U suprotnom neka pokusa Picasso da povuce sliku
          */
         if (uri == null) {
-            getSupportActionBar().setIcon(d);
+            toolbar.setLogo(d);
         } else {
             Picasso.with(getApplicationContext()).load(uri).resize(120, 120).placeholder(d).error(d).into(target);
         }
