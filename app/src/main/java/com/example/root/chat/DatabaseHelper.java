@@ -224,7 +224,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_MESSAGE_TEXT, message.getMessage());
         values.put(KEY_IS_ME, message.isMe());
-        values.put(KEY_DATE, message.getMsgDate());
+        values.put(KEY_DATE, message.getMsgDateForDatabase());
         values.put(KEY_CONTACT_ID, id);
 
         db.insert(TABLE_MESSAGE, null, values);
