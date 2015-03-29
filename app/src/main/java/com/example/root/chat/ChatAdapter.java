@@ -42,7 +42,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         View row = convertView;
 
         if (row == null) {
-            row = LayoutInflater.from(context).inflate(R.layout.message_row_date, parent, false);
+            row = LayoutInflater.from(context).inflate(R.layout.message_row, parent, false);
             holder = new MyViewHolder(row);
             row.setTag(holder);
         } else {
