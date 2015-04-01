@@ -80,6 +80,10 @@ public class NewDialog extends DialogFragment {
         /**
          * Dialog sa pozitivnim i negativnim button-om
          */
+
+        builder.setTitle("New message");
+        builder.setMessage("Enter number or contact name:");
+
         builder.setView(view)
                 .setPositiveButton("New Message", new DialogInterface.OnClickListener() {
                     @Override
